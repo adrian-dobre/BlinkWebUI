@@ -1,0 +1,45 @@
+.dashboard-layout {
+  display: flex;
+
+  .app-bar {
+    z-index: 1201;
+  }
+
+  .drawer {
+    flex-shrink: 0;
+    width: 240px;
+
+    .drawer-menu {
+      overflow: auto;
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .drawer-menu-item {
+        width: 240px;
+
+        .icon {
+          color: inherit;
+        }
+      }
+
+      .active {
+        .drawer-menu-item {
+          color: #2196f3;
+        }
+      }
+    }
+  }
+
+  main {
+    max-height: 100vh;
+    overflow: hidden;
+    width: 100%;
+
+    .dashboard-content {
+      height: 100%;
+    }
+  }
+}

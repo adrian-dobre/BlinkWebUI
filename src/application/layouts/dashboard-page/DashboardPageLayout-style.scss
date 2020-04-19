@@ -1,0 +1,18 @@
+.dashboard-page {
+  height: 100%;
+
+  .page-title-wrapper {
+    margin-bottom: 3px;
+
+    .page-title {
+      padding: 10px 20px;
+      width: 100%;
+    }
+  }
+
+  .page-content {
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px;
+  }
+}

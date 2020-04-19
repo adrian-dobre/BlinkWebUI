@@ -1,0 +1,12 @@
+{
+  "extends": "stylelint-config-sass-guidelines",
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "rules": {
+    "color-hex-length": "long",
+    "no-missing-end-of-source-newline": null,
+    "max-nesting-depth": 10,
+    "selector-max-compound-selectors": 10
+  }
+}
