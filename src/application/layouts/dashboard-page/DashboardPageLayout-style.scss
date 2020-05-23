@@ -7,7 +7,19 @@
     .page-title {
       padding: 10px 20px;
       width: 100%;
+
+      svg {
+        font-size: 1.2em;
+        margin-right: 10px;
+        vertical-align: bottom;
+      }
     }
+  }
+
+  .loading {
+    left: calc(50% - 20px);
+    position: relative;
+    top: 30%;
   }
 
   .page-content {

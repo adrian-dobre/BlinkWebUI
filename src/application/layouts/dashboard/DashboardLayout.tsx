@@ -7,12 +7,64 @@ import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Cloud, Settings, YouTube } from '@material-ui/icons';
+import {
+    Cloud, Language, Settings, Videocam, YouTube
+} from '@material-ui/icons';
 import './DashboardLayout-style.scss';
 import { NavLink } from 'react-router-dom';
 
-export default class DashboardLayout extends React.Component<PropsWithChildren<{}>, {}> {
+interface DashboardLayoutProps {
+    hideDrawer?: boolean;
+}
+
+export default class DashboardLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutProps>, {}> {
     render(): JSX.Element {
+        let drawer: JSX.Element = <></>;
+
+        if (!this.props.hideDrawer) {
+            drawer = (
+                <Drawer className="drawer" variant="permanent">
+                    <Toolbar />
+                    <div className="drawer-menu">
+                        <List>
+                            <NavLink to="/recordings">
+                                <ListItem className="drawer-menu-item" button key={Math.random()}>
+                                    <ListItemIcon className="icon">
+                                        <YouTube />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Recordings" />
+                                </ListItem>
+                            </NavLink>
+                            <NavLink to="/cameras">
+                                <ListItem className="drawer-menu-item" button key={Math.random()}>
+                                    <ListItemIcon className="icon">
+                                        <Videocam />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Cameras" />
+                                </ListItem>
+                            </NavLink>
+                            <NavLink to="/sync-modules">
+                                <ListItem className="drawer-menu-item" button key={Math.random()}>
+                                    <ListItemIcon className="icon">
+                                        <Cloud />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Sync Modules" />
+                                </ListItem>
+                            </NavLink>
+                            <NavLink to="/networks">
+                                <ListItem className="drawer-menu-item" button key={Math.random()}>
+                                    <ListItemIcon className="icon">
+                                        <Language />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Networks" />
+                                </ListItem>
+                            </NavLink>
+                        </List>
+                    </div>
+                </Drawer>
+            );
+        }
+
         return (
             <div className="dashboard-layout">
                 <AppBar className="app-bar" position="fixed">
@@ -22,39 +74,9 @@ export default class DashboardLayout extends React.Component<PropsWithChildren<{
                         </Typography>
                     </Toolbar>
                 </AppBar>
-                <Drawer className="drawer" variant="permanent">
-                    <Toolbar />
-                    <div className="drawer-menu">
-                        <List>
-                            <NavLink to="/settings">
-                                <ListItem className="drawer-menu-item" button key={Math.random()}>
-                                    <ListItemIcon className="icon">
-                                        <Settings />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Settings'} />
-                                </ListItem>
-                            </NavLink>
-                            <NavLink to="/sync-modules">
-                                <ListItem className="drawer-menu-item" button key={Math.random()}>
-                                    <ListItemIcon className="icon">
-                                        <Cloud />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Sync Modules'} />
-                                </ListItem>
-                            </NavLink>
-                            <NavLink to="/recordings">
-                                <ListItem className="drawer-menu-item" button key={Math.random()}>
-                                    <ListItemIcon className="icon">
-                                        <YouTube />
-                                    </ListItemIcon>
-                                    <ListItemText primary={'Recordings'} />
-                                </ListItem>
-                            </NavLink>
-                        </List>
-                    </div>
-                </Drawer>
+                {drawer}
                 <main>
-                    <div className={'dashboard-content'}>
+                    <div className="dashboard-content">
                         <Toolbar />
                         {this.props.children}
                     </div>

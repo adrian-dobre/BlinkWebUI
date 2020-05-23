@@ -1,34 +1,72 @@
 import React, { PropsWithChildren } from 'react';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { YouTube } from '@material-ui/icons';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
+import Media from '../../../domain/entities/Media';
+import MediaRepositoryImpl from '../../../infrastructure/repositories/impl/blink/MediaRepositoryImpl';
+import RecordingComponent from '../../components/recoding/RecordingComponent';
+import Session from '../../../domain/entities/Session';
 
-export default class RecordingsPage extends React.Component<PropsWithChildren<{}>, {}> {
+interface RecordingsPageState {
+    recordings: Media[];
+    loading: boolean;
+}
+
+interface RecordingsPageProps {
+    session: Session;
+}
+
+export default class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPageProps>,
+    RecordingsPageState> {
+    constructor(props: RecordingsPageProps) {
+        super(props);
+        this.state = {
+            recordings: [],
+            loading: true
+        };
+    }
+
+    componentDidMount(): void {
+        this.getRecordingsList();
+    }
+
+    getRecordingsList(page = 1): Promise<any> {
+        return new MediaRepositoryImpl('http://localhost:8080')
+            .getMediaList(
+                this.props.session.region.tier,
+                this.props.session.account.id.toString(),
+                this.props.session.authtoken.authtoken,
+                page
+            )
+            .then((mediaList) => {
+                this.setState((previousState) => ({
+                    loading: false,
+                    recordings: previousState.recordings.concat(mediaList)
+                }));
+                if (mediaList.length === 25) {
+                    // eslint-disable-next-line no-plusplus,no-param-reassign
+                    return this.getRecordingsList(++page);
+                }
+            });
+    }
+
     render(): JSX.Element {
-        let data: number[] = Array.from({ length: 100 });
-        data = data.fill(1, 0, 100);
-        console.log(data);
-
         return (
-            <DashboardPageLayout title="Recordings">
-                <Grid container spacing={2} justify="center">
-                    {data.map((value, index) => (
-                        <Grid key={index} item>
-                            <Paper
-                                style={{
-                                    textAlign: 'center',
-                                    height: 140,
-                                    width: 200
-                                }}
-                            >
-                                <YouTube
-                                    style={{
-                                        fontSize: '140px'
-                                    }}
+            <DashboardPageLayout loading={this.state.loading} title="Recordings" icon={<YouTube />}>
+                <Grid container spacing={2}>
+                    {this
+                        .state
+                        .recordings
+                        .map((recording, index) => (
+                            // eslint-disable-next-line react/no-array-index-key
+                            <Grid key={index} item>
+                                <RecordingComponent
+                                    session={this.props.session}
+                                    media={recording}
+                                    regionId={this.props.session.region.tier}
                                 />
-                            </Paper>
-                        </Grid>
-                    ))}
+                            </Grid>
+                        ))}
                 </Grid>
             </DashboardPageLayout>
         );

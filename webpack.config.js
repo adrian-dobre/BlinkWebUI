@@ -6,12 +6,13 @@ const StylelintPlugin = require('stylelint-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-    entry: path.resolve(__dirname, 'src', 'index.tsx'),
+    entry: ['react-hot-loader/patch', path.resolve(__dirname, 'src', 'index.tsx')],
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
     mode: 'development',
+    devtool: 'source-map',
     resolve: {
         extensions: ['.js', '.ts', '.tsx']
     },
@@ -59,6 +60,7 @@ module.exports = {
     devServer: {
         contentBase: path.resolve(__dirname, 'dist'),
         historyApiFallback: true,
+        host: 'ui.blinkforhome.com',
         overlay: true,
         port: 8888
     }
