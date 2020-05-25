@@ -1,6 +1,6 @@
 export default class Media {
     id: number;
-    created_at: Date;
+    createdAt: Date;
     updatedAt: Date;
     deleted: boolean;
     device: string;
@@ -18,7 +18,7 @@ export default class Media {
     constructor(jsonBody: Media) {
         this.id = jsonBody.id;
         // eslint-disable-next-line @typescript-eslint/camelcase
-        this.created_at = jsonBody.created_at;
+        this.createdAt = jsonBody.createdAt;
         this.updatedAt = jsonBody.updatedAt;
         this.deleted = jsonBody.deleted;
         this.device = jsonBody.device;

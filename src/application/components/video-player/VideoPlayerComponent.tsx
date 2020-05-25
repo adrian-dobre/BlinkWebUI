@@ -17,12 +17,6 @@ export default class VideoPlayerComponent extends React.PureComponent<VideoPlaye
                     url={this.props.mediaStream}
                     controls={true}
                     playing={true}
-                    width={640}
-                    style={{
-                        position: 'fixed',
-                        left: 'calc(50% - 320px)',
-                        top: 'calc(25vh)'
-                    }}
                 />
             </div>
         );

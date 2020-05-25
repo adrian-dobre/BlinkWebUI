@@ -33,17 +33,27 @@ module.exports = {
                 use: ['html-loader']
             },
             {
-                test: /\.s([ac])ss$/,
+                test: /\.module\.s([ac])ss$/,
                 use: [
                     'style-loader',
                     {
                         loader: 'css-loader',
                         options: {
+                            localsConvention: 'camelCase',
                             modules: {
-                                localIdentName: '[local]'
+                                localIdentName: '[local]--[hash:base64:10]'
                             }
                         }
                     },
+                    'sass-loader'
+                ]
+            },
+            {
+                test: /\.s([ac])ss$/,
+                exclude: /\.module\.s([ac])ss$/,
+                use: [
+                    'style-loader',
+                    'css-loader',
                     'sass-loader'
                 ]
             }

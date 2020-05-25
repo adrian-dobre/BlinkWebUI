@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import { Grid } from '@material-ui/core';
 import { YouTube } from '@material-ui/icons';
+import moment from 'moment';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
 import Media from '../../../domain/entities/Media';
 import MediaRepositoryImpl from '../../../infrastructure/repositories/impl/blink/MediaRepositoryImpl';
@@ -41,7 +42,9 @@ export default class RecordingsPage extends React.Component<PropsWithChildren<Re
             .then((mediaList) => {
                 this.setState((previousState) => ({
                     loading: false,
-                    recordings: previousState.recordings.concat(mediaList)
+                    recordings: mediaList
+                        .concat(previousState.recordings)
+                        .sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix())
                 }));
                 if (mediaList.length === 25) {
                     // eslint-disable-next-line no-plusplus,no-param-reassign

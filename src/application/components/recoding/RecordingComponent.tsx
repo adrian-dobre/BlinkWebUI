@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { Paper } from '@material-ui/core';
+import { Backdrop, Paper } from '@material-ui/core';
 import { YouTube } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
@@ -7,6 +7,7 @@ import Media from '../../../domain/entities/Media';
 import MediaRepositoryImpl from '../../../infrastructure/repositories/impl/blink/MediaRepositoryImpl';
 import Session from '../../../domain/entities/Session';
 import VideoPlayerComponent from '../video-player/VideoPlayerComponent';
+import LoadingComponent from '../loading/LoadingComponent';
 
 interface RecordingComponentState {
     thumb?: string;
@@ -102,14 +103,17 @@ export default class RecordingComponent
 
         if (this.state.isPlaying) {
             player = (
-                <div
+                <Backdrop
+                    open={true}
                     style={{
+                        cursor: 'pointer',
                         position: 'absolute',
                         top: 0,
                         left: 0,
-                        background: 'black',
+                        justifyContent: 'center',
                         width: '100vw',
                         height: '100vh',
+                        background: 'rgba(66,66,66,0.96)',
                         zIndex: 1500
                     }}
                     onClick={() => {
@@ -119,7 +123,8 @@ export default class RecordingComponent
                     }}
                 >
                     {this.state.media && <VideoPlayerComponent mediaStream={this.state.media} />}
-                </div>
+                    {!this.state.media && <LoadingComponent />}
+                </Backdrop>
             );
         }
 
@@ -127,7 +132,11 @@ export default class RecordingComponent
             <>
                 {player}
                 <Paper
+                    onClick={() => {
+                        this.onClick();
+                    }}
                     style={{
+                        cursor: 'pointer',
                         position: 'relative',
                         textAlign: 'center',
                         height: '140px',
@@ -136,9 +145,6 @@ export default class RecordingComponent
                 >
                     {image}
                     <YouTube
-                        onClick={() => {
-                            this.onClick();
-                        }}
                         style={{
                             position: 'absolute',
                             top: 0,
@@ -147,7 +153,7 @@ export default class RecordingComponent
                             fontSize: '110px'
                         }}
                     />
-                    <Typography>{moment(this.props.media.created_at).format('DD/MM/YYYY HH:mm:ss')}</Typography>
+                    <Typography>{moment(this.props.media.createdAt).format('DD/MM/YYYY HH:mm:ss')}</Typography>
                 </Paper>
             </>
         );

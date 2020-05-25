@@ -1,4 +1,5 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import SimplePubSub, { PubSubEvent } from '../../application/utils/SimplePubSub';
 
 const axios = require('axios').default;
 
@@ -50,6 +51,8 @@ export class BaseServiceClient {
             );
         });
 
+        SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_STARTED, axiosInstance);
+
         return axiosInstance({
             ...config,
             headers: {
@@ -58,7 +61,17 @@ export class BaseServiceClient {
                 Pragma: 'no-cache'
             },
             baseURL: this.baseUrl
-        });
+        })
+            .then((response: any) => {
+                SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_SUCCESS, response);
+                SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_ENDED, response);
+                return response;
+            })
+            .catch((reason: any) => {
+                SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_FAILED, reason);
+                SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_ENDED, reason);
+                throw reason;
+            });
     }
 
     get(path?: string, config: AxiosRequestConfig = {}): Promise<BaseServiceResponse> {

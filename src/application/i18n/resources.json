@@ -1,0 +1,22 @@
+{
+  "en": {
+    "translation": {
+      "application.title": "Blink Web",
+      "cameras-page.cameras-table.header.battery": "Battery",
+      "cameras-page.cameras-table.header.enabled": "Enabled",
+      "cameras-page.cameras-table.header.name": "Name",
+      "cameras-page.cameras-table.header.sync-module-signal": "Sync Module Signal",
+      "cameras-page.cameras-table.header.temperature": "Temperature",
+      "cameras-page.cameras-table.header.type": "Type",
+      "cameras-page.cameras-table.header.wifi-signal": "WiFi Signal",
+      "cameras-page.title": "Cameras",
+      "login-page.login-form.button-label.login": "Login",
+      "login-page.login-form.field-label.password": "Password",
+      "login-page.login-form.field-label.username": "Username",
+      "login-page.login-form.title": "Login",
+      "networks-page.title": "Networks",
+      "recordings-page.title": "Recordings",
+      "sync-modules-page.title": "Sync Modules"
+    }
+  }
+}

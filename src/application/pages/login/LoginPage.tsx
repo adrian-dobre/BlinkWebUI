@@ -3,38 +3,45 @@ import { TextField } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import AuthRepositoryImpl from '../../../infrastructure/repositories/impl/blink/AuthRepositoryImpl';
 import Session from '../../../domain/entities/Session';
+import SimplePubSub, { PubSubEvent } from '../../utils/SimplePubSub';
+import AccountRepositoryImpl from '../../../infrastructure/repositories/impl/blink/AccountRepositoryImpl';
 
 interface LoginPageState {
     username?: string;
     password?: string;
 }
 
-interface LoginPageProps {
+interface LoginPageProps extends WithTranslation {
     onLogin: (session: Session) => void;
 }
 
-export default class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
+class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
     constructor(props: any) {
         super(props);
         this.state = {};
     }
 
-    onFieldUpdate(field: keyof LoginPageState, value?: string) {
+    onFieldUpdate(field: keyof LoginPageState, value?: string): void {
         this.setState({
             [field]: value
         });
     }
 
-
-    onLogin() {
+    onLogin(): void {
         if (this.state.username && this.state.password) {
             new AuthRepositoryImpl('http://localhost:8080')
                 .login(this.state.username, this.state.password)
-                .then((session) => {
-                    this.props.onLogin(session);
-                });
+                .then((session) => new AccountRepositoryImpl('http://localhost:8080')
+                    .getAccount(session.region.tier, session.authtoken.authtoken)
+                    .then((account) => {
+                        SimplePubSub.publish(PubSubEvent.UI_CONSOLE_SUCCESS, {
+                            message: `Welcome ${account.email}`
+                        });
+                        this.props.onLogin(session);
+                    }));
         }
     }
 
@@ -46,13 +53,13 @@ export default class LoginPage extends React.Component<LoginPageProps, LoginPage
                 }}
             >
                 <Typography variant="h4" style={{ paddingBottom: '20px' }}>
-                    Login
+                    {this.props.t('login-page.login-form.title')}
                 </Typography>
                 <form noValidate autoComplete="off">
                     <TextField
                         size="small"
                         required={true}
-                        label="Username"
+                        label={this.props.t('login-page.login-form.field-label.username')}
                         fullWidth
                         margin="dense"
                         variant="outlined"
@@ -64,7 +71,7 @@ export default class LoginPage extends React.Component<LoginPageProps, LoginPage
                         type="password"
                         size="small"
                         required={true}
-                        label="Password"
+                        label={this.props.t('login-page.login-form.field-label.password')}
                         fullWidth
                         margin="dense"
                         variant="outlined"
@@ -80,7 +87,7 @@ export default class LoginPage extends React.Component<LoginPageProps, LoginPage
                                 this.onLogin();
                             }}
                         >
-                            Login
+                            {this.props.t('login-page.login-form.button-label.login')}
                         </Button>
                     </div>
                 </form>
@@ -88,3 +95,5 @@ export default class LoginPage extends React.Component<LoginPageProps, LoginPage
         );
     }
 }
+
+export default withTranslation()(LoginPage);

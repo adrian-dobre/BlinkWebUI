@@ -3,6 +3,7 @@ import {
     Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Paper, Switch
 } from '@material-ui/core';
 import { Videocam } from '@material-ui/icons';
+import { WithTranslation, withTranslation } from 'react-i18next';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
 import Session from '../../../domain/entities/Session';
 import CameraRepositoryImpl from '../../../infrastructure/repositories/impl/blink/CameraRepositoryImpl';
@@ -16,7 +17,7 @@ interface CamerasPageState {
     loading: boolean;
 }
 
-interface CamerasPageProps {
+interface CamerasPageProps extends WithTranslation {
     session: Session;
 }
 
@@ -25,7 +26,7 @@ function getCelsiusTemp(fahrenheitTemp: number): number {
     return Math.round((fahrenheitTemp - 32) * 5 / 9);
 }
 
-export default class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps>, CamerasPageState> {
+class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps>, CamerasPageState> {
     constructor(props: any) {
         super(props);
         this.state = {
@@ -58,20 +59,30 @@ export default class CamerasPage extends React.PureComponent<PropsWithChildren<C
             <DashboardPageLayout
                 className="cameras-page"
                 loading={this.state.loading}
-                title="Cameras"
+                title={this.props.t('cameras-page.title')}
                 icon={<Videocam />}
             >
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Name</TableCell>
-                                <TableCell align="left">Type</TableCell>
-                                <TableCell align="center">Battery</TableCell>
-                                <TableCell align="center">WiFi Signal</TableCell>
-                                <TableCell align="center">Sync Module Signal</TableCell>
-                                <TableCell align="center">Temperature</TableCell>
-                                <TableCell align="center">Enabled</TableCell>
+                                <TableCell>{this.props.t('cameras-page.cameras-table.header.name')}</TableCell>
+                                <TableCell>{this.props.t('cameras-page.cameras-table.header.type')}</TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('cameras-page.cameras-table.header.battery')}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('cameras-page.cameras-table.header.wifi-signal')}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('cameras-page.cameras-table.header.sync-module-signal')}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('cameras-page.cameras-table.header.temperature')}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('cameras-page.cameras-table.header.enabled')}
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -80,7 +91,7 @@ export default class CamerasPage extends React.PureComponent<PropsWithChildren<C
                                     <TableCell component="th" scope="row">
                                         {row.name}
                                     </TableCell>
-                                    <TableCell align="left">{row.type}</TableCell>
+                                    <TableCell>{row.type}</TableCell>
                                     <TableCell align="center">
                                         <BatteryIndicatorComponent strength={row.signals.battery} />
                                     </TableCell>
@@ -110,3 +121,5 @@ export default class CamerasPage extends React.PureComponent<PropsWithChildren<C
         );
     }
 }
+
+export default withTranslation()(CamerasPage);

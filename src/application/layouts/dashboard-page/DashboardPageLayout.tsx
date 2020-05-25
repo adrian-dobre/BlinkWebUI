@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { Paper, Typography } from '@material-ui/core';
-import './DashboardPageLayout-style.scss';
+import './DashboardPageLayoutStyle.scss';
 import LoadingComponent from '../../components/loading/LoadingComponent';
 
 interface DashboardPageLayoutProps {
