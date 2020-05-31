@@ -1,0 +1,38 @@
+.thumbnail-placeholder {
+  background: #808080;
+  border-radius: 3px 3px 0 0;
+  height: 110px;
+}
+
+.thumbnail-style {
+  border-radius: 3px 3px 0 0;
+  margin: auto;
+}
+
+.player-backdrop {
+  background: rgba(66, 66, 66, 0.96);
+  cursor: pointer;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  z-index: 1500;
+}
+
+.recording {
+  cursor: pointer;
+  height: 140px;
+  position: relative;
+  text-align: center;
+  width: 195px;
+
+  .recording-icon {
+    font-size: 110px;
+    left: 42px;
+    opacity: 0.5;
+    position: absolute;
+    top: 0;
+  }
+}

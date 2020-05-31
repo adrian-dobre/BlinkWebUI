@@ -128,10 +128,7 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
         return (
             <div className={styles.dashboardLayout}>
                 <AppBar className={styles.appBar} position="fixed">
-                    <Toolbar style={{
-                        justifyContent: 'space-between'
-                    }}
-                    >
+                    <Toolbar className={styles.appBarToolbar}>
                         <Typography variant="h4" noWrap>
                             {this.props.t('application.title')}
                         </Typography>

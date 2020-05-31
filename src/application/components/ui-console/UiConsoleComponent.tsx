@@ -4,6 +4,7 @@ import { Grow } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { v4 } from 'uuid';
 import SimplePubSub, { PubSubEvent } from '../../utils/SimplePubSub';
+import styles from './UiConsoleComponentStyle.module.scss';
 
 export enum UIConsoleAlertType {
     ERROR = 'error',
@@ -13,7 +14,7 @@ export enum UIConsoleAlertType {
 }
 
 interface UIConsoleAlert {
-    id?: string;
+    id: string;
     type: UIConsoleAlertType;
     message: string;
     dismissed?: boolean;
@@ -83,7 +84,7 @@ export default class UiConsoleComponent extends React.PureComponent<{}, UiConsol
             });
     }
 
-    onAlertDismissed(alert: UIConsoleAlert) {
+    onAlertDismissed(alert: UIConsoleAlert): void {
         this.setState((prevState) => ({
             alerts: prevState.alerts.map((prevAlert) => {
                 if (prevAlert === alert) {
@@ -102,35 +103,20 @@ export default class UiConsoleComponent extends React.PureComponent<{}, UiConsol
         }, 200);
     }
 
-    render() {
+    render(): JSX.Element {
         return (
-            <div
-                style={{
-                    position: 'absolute',
-                    top: '5px',
-                    zIndex: 1500,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center'
-                }}
-            >
+            <div className={styles.uiConsole}>
                 {this.state.alerts
                     .map((alert) => (
                         <Grow
-                            key={alert.id ?? Math.random()}
+                            key={alert.id}
                             in={!alert.dismissed}
                         >
                             <Alert
-                                style={{
-                                    maxWidth: 'fit-content',
-                                    margin: '5px'
-                                }}
-
+                                className={styles.consoleAlert}
                                 severity={alert.type}
                                 variant="filled"
-                                onClose={() => this.onAlertDismissed(alert)}
+                                onClose={(): void => this.onAlertDismissed(alert)}
                             >
                                 {alert.message}
                             </Alert>

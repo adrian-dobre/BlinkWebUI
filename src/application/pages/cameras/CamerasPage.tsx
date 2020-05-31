@@ -1,16 +1,19 @@
 import React, { PropsWithChildren } from 'react';
 import {
-    Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Paper, Switch
+    Paper, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from '@material-ui/core';
 import { Videocam } from '@material-ui/icons';
 import { WithTranslation, withTranslation } from 'react-i18next';
+import { Container } from 'typedi';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
 import Session from '../../../domain/entities/Session';
 import CameraRepositoryImpl from '../../../infrastructure/repositories/impl/blink/CameraRepositoryImpl';
 import Camera from '../../../domain/entities/Camera';
 import SignalIndicatorComponent from '../../components/signal-indicator/SignalIndicatorComponent';
 import BatteryIndicatorComponent from '../../components/battery-indicator/BatteryIndicatorComponent';
-import './CamerasPageStyle.scss';
+import styles from './CamerasPageStyle.module.scss';
+import { cameraRepositoryToken } from '../../config/ServiceLocator';
+import { CameraRepository } from '../../../infrastructure/repositories/CameraRepository';
 
 interface CamerasPageState {
     cameras: Camera[];
@@ -27,6 +30,8 @@ function getCelsiusTemp(fahrenheitTemp: number): number {
 }
 
 class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps>, CamerasPageState> {
+    cameraRepository: CameraRepository = Container.get(cameraRepositoryToken);
+
     constructor(props: any) {
         super(props);
         this.state = {
@@ -40,7 +45,7 @@ class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps
     }
 
     getCameraList(): Promise<any> {
-        return new CameraRepositoryImpl('http://localhost:8080')
+        return this.cameraRepository
             .getCameraList(
                 this.props.session.region.tier,
                 this.props.session.account.id.toString(),
@@ -57,7 +62,7 @@ class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps
     render(): JSX.Element {
         return (
             <DashboardPageLayout
-                className="cameras-page"
+                className={styles.camerasPage}
                 loading={this.state.loading}
                 title={this.props.t('cameras-page.title')}
                 icon={<Videocam />}

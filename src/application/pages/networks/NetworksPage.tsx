@@ -3,24 +3,28 @@ import {
     Paper, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from '@material-ui/core';
 import { Language } from '@material-ui/icons';
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { Container } from 'typedi';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
 import Session from '../../../domain/entities/Session';
-import NetworkRepositoryImpl from '../../../infrastructure/repositories/impl/blink/NetworkRepositoryImpl';
 import Network from '../../../domain/entities/Network';
-import './NetworksPageStyle.scss';
+import styles from './NetworksPageStyle.modules.scss';
+import { NetworkRepository } from '../../../infrastructure/repositories/NetworkRepository';
+import { networkRepositoryToken } from '../../config/ServiceLocator';
 
 interface NetworksPageState {
     networks: Network[];
     loading: boolean;
 }
 
-interface NetworksPageProps {
+interface NetworksPageProps extends WithTranslation {
     session: Session;
 }
 
 
-export default class NetworksPage
-    extends React.PureComponent<PropsWithChildren<NetworksPageProps>, NetworksPageState> {
+class NetworksPage extends React.PureComponent<PropsWithChildren<NetworksPageProps>, NetworksPageState> {
+    networkRepository: NetworkRepository = Container.get(networkRepositoryToken);
+
     constructor(props: NetworksPageProps) {
         super(props);
         this.state = {
@@ -34,7 +38,7 @@ export default class NetworksPage
     }
 
     getNetworkList(): Promise<any> {
-        return new NetworkRepositoryImpl('http://localhost:8080')
+        return this.networkRepository
             .getNetworkList(
                 this.props.session.region.tier,
                 this.props.session.account.id.toString(),
@@ -51,17 +55,21 @@ export default class NetworksPage
     render(): JSX.Element {
         return (
             <DashboardPageLayout
-                className="networks-page"
+                className={styles.networksPage}
                 loading={this.state.loading}
-                title="Networks"
+                title={this.props.t('networks-page.title')}
                 icon={<Language />}
             >
                 <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
+                    <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Name</TableCell>
-                                <TableCell align="center">Armed</TableCell>
+                                <TableCell>
+                                    {this.props.t('networks-page.networks-table.header.name')}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('networks-page.networks-table.header.armed')}
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -86,3 +94,5 @@ export default class NetworksPage
         );
     }
 }
+
+export default withTranslation()(NetworksPage);

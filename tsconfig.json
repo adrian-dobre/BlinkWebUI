@@ -2,7 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "target": "es6",
-    "module": "commonjs",
+    "module": "ESNext",
     "allowJs": true,
     "jsx": "react",
     "outDir": "./dist",
@@ -11,6 +11,8 @@
     "strict": true,
     "moduleResolution": "node",
     "baseUrl": "./src",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "typeRoots": [
       "node_modules/@types",
       "src/typings"

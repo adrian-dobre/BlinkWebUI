@@ -3,26 +3,30 @@ import {
     Paper, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 } from '@material-ui/core';
 import { Cloud } from '@material-ui/icons';
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { Container } from 'typedi';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
 import Session from '../../../domain/entities/Session';
-import SyncModuleRepositoryImpl from '../../../infrastructure/repositories/impl/blink/SyncModuleRepositoryImpl';
 import SyncModule from '../../../domain/entities/SyncModule';
 import SignalIndicatorComponent from '../../components/signal-indicator/SignalIndicatorComponent';
-import './SyncModulesPageStyle.scss';
+import styles from './SyncModulesPageStyle.module.scss';
+import { SyncModuleRepository } from '../../../infrastructure/repositories/SyncModuleRepository';
+import { syncModuleRepositoryToken } from '../../config/ServiceLocator';
 
-interface CamerasPageState {
+interface SyncModulesPageState {
     syncModules: SyncModule[];
     loading: boolean;
 }
 
-interface CamerasPageProps {
+interface SyncModulesPageProps extends WithTranslation{
     session: Session;
 }
 
 
-export default class SyncModulesPage
-    extends React.PureComponent<PropsWithChildren<CamerasPageProps>, CamerasPageState> {
-    constructor(props: CamerasPageProps) {
+class SyncModulesPage extends React.PureComponent<PropsWithChildren<SyncModulesPageProps>, SyncModulesPageState> {
+    syncModuleRepository: SyncModuleRepository = Container.get(syncModuleRepositoryToken);
+
+    constructor(props: SyncModulesPageProps) {
         super(props);
         this.state = {
             syncModules: [],
@@ -35,7 +39,7 @@ export default class SyncModulesPage
     }
 
     getModuleList(): Promise<any> {
-        return new SyncModuleRepositoryImpl('http://localhost:8080')
+        return this.syncModuleRepository
             .getSyncModuleList(
                 this.props.session.region.tier,
                 this.props.session.account.id.toString(),
@@ -52,19 +56,27 @@ export default class SyncModulesPage
     render(): JSX.Element {
         return (
             <DashboardPageLayout
-                className="sync-modules-page"
+                className={styles.syncModulesPage}
                 loading={this.state.loading}
-                title="Sync Modules"
+                title={this.props.t('sync-modules-page.title')}
                 icon={<Cloud />}
             >
                 <TableContainer component={Paper}>
-                    <Table aria-label="simple table">
+                    <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Name</TableCell>
-                                <TableCell align="center">Status</TableCell>
-                                <TableCell align="center">WiFi Strength</TableCell>
-                                <TableCell align="center">Temp Alerts</TableCell>
+                                <TableCell>
+                                    {this.props.t('sync-modules-page.sync-modules-table.header.name')}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('sync-modules-page.sync-modules-table.header.status')}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('sync-modules-page.sync-modules-table.header.wifi-signal')}
+                                </TableCell>
+                                <TableCell align="center">
+                                    {this.props.t('sync-modules-page.sync-modules-table.header.temperature-alerts')}
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -93,3 +105,5 @@ export default class SyncModulesPage
         );
     }
 }
+
+export default withTranslation()(SyncModulesPage);

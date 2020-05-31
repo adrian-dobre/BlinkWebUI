@@ -1,0 +1,16 @@
+.login-card {
+  left: calc(50vw - 250px);
+  padding: 30px;
+  position: relative;
+  top: 150px;
+  width: 500px;
+
+  .card-title {
+    padding-bottom: 20px;
+  }
+
+  .card-actions {
+    padding-top: 20px;
+    text-align: right;
+  }
+}

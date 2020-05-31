@@ -15,8 +15,14 @@
       "login-page.login-form.field-label.username": "Username",
       "login-page.login-form.title": "Login",
       "networks-page.title": "Networks",
+      "networks-page.networks-table.header.name": "Name",
+      "networks-page.networks-table.header.armed": "Armed",
       "recordings-page.title": "Recordings",
-      "sync-modules-page.title": "Sync Modules"
+      "sync-modules-page.title": "Sync Modules",
+      "sync-modules-page.sync-modules-table.header.name": "Name",
+      "sync-modules-page.sync-modules-table.header.status": "Status",
+      "sync-modules-page.sync-modules-table.header.wifi-signal": "WiFi Signal",
+      "sync-modules-page.sync-modules-table.header.temperature-alerts": "Temperature Alerts"
     }
   }
 }

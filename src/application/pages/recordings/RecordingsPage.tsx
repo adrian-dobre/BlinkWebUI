@@ -2,23 +2,28 @@ import React, { PropsWithChildren } from 'react';
 import { Grid } from '@material-ui/core';
 import { YouTube } from '@material-ui/icons';
 import moment from 'moment';
+import { withTranslation, WithTranslation } from 'react-i18next';
+import { Container } from 'typedi';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
 import Media from '../../../domain/entities/Media';
-import MediaRepositoryImpl from '../../../infrastructure/repositories/impl/blink/MediaRepositoryImpl';
 import RecordingComponent from '../../components/recoding/RecordingComponent';
 import Session from '../../../domain/entities/Session';
+import { MediaRepository } from '../../../infrastructure/repositories/MediaRepository';
+import { mediaRepositoryToken } from '../../config/ServiceLocator';
 
 interface RecordingsPageState {
     recordings: Media[];
     loading: boolean;
 }
 
-interface RecordingsPageProps {
+interface RecordingsPageProps extends WithTranslation {
     session: Session;
 }
 
-export default class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPageProps>,
+class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPageProps>,
     RecordingsPageState> {
+    mediaRepository: MediaRepository = Container.get(mediaRepositoryToken);
+
     constructor(props: RecordingsPageProps) {
         super(props);
         this.state = {
@@ -32,7 +37,7 @@ export default class RecordingsPage extends React.Component<PropsWithChildren<Re
     }
 
     getRecordingsList(page = 1): Promise<any> {
-        return new MediaRepositoryImpl('http://localhost:8080')
+        return this.mediaRepository
             .getMediaList(
                 this.props.session.region.tier,
                 this.props.session.account.id.toString(),
@@ -55,7 +60,11 @@ export default class RecordingsPage extends React.Component<PropsWithChildren<Re
 
     render(): JSX.Element {
         return (
-            <DashboardPageLayout loading={this.state.loading} title="Recordings" icon={<YouTube />}>
+            <DashboardPageLayout
+                loading={this.state.loading}
+                title={this.props.t('recordings-page.title')}
+                icon={<YouTube />}
+            >
                 <Grid container spacing={2}>
                     {this
                         .state
@@ -75,3 +84,5 @@ export default class RecordingsPage extends React.Component<PropsWithChildren<Re
         );
     }
 }
+
+export default withTranslation()(RecordingsPage);

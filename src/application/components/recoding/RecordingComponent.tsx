@@ -3,11 +3,14 @@ import { Backdrop, Paper } from '@material-ui/core';
 import { YouTube } from '@material-ui/icons';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
+import { Container } from 'typedi';
 import Media from '../../../domain/entities/Media';
-import MediaRepositoryImpl from '../../../infrastructure/repositories/impl/blink/MediaRepositoryImpl';
 import Session from '../../../domain/entities/Session';
 import VideoPlayerComponent from '../video-player/VideoPlayerComponent';
 import LoadingComponent from '../loading/LoadingComponent';
+import styles from './RecordingComponentStyle.module.scss';
+import { MediaRepository } from '../../../infrastructure/repositories/MediaRepository';
+import { mediaRepositoryToken } from '../../config/ServiceLocator';
 
 interface RecordingComponentState {
     thumb?: string;
@@ -22,26 +25,10 @@ interface RecordingComponentProps {
     session: Session;
 }
 
-function getCachedMedia(region: string, mediaPath: string, authToken: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-        new MediaRepositoryImpl('http://localhost:8080')
-            .getMedia(region, mediaPath, authToken)
-            .then((thumb) => {
-                // eslint-disable-next-line no-undef
-                const reader = new FileReader();
-                reader.readAsDataURL(thumb);
-                reader.onerror = reject;
-                reader.onloadend = () => {
-                    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                    // @ts-ignore
-                    resolve(reader.result as string);
-                };
-            });
-    });
-}
-
 export default class RecordingComponent
     extends React.Component<PropsWithChildren<RecordingComponentProps>, RecordingComponentState> {
+    mediaRepository: MediaRepository = Container.get(mediaRepositoryToken);
+
     constructor(props: RecordingComponentProps) {
         super(props);
         this.state = {
@@ -51,7 +38,7 @@ export default class RecordingComponent
     }
 
     componentDidMount(): void {
-        getCachedMedia(
+        this.getMedia(
             this.props.session.region.tier,
             this.props.media.thumbnail,
             this.props.session.authtoken.authtoken
@@ -67,7 +54,7 @@ export default class RecordingComponent
         this.setState({
             isPlaying: true
         });
-        getCachedMedia(
+        this.getMedia(
             this.props.session.region.tier,
             this.props.media.media,
             this.props.session.authtoken.authtoken
@@ -78,25 +65,37 @@ export default class RecordingComponent
         });
     }
 
+    getMedia(region: string, mediaPath: string, authToken: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this.mediaRepository
+                .getMedia(region, mediaPath, authToken)
+                .then((thumb) => {
+                    // eslint-disable-next-line no-undef
+                    const reader = new FileReader();
+                    reader.readAsDataURL(thumb);
+                    reader.onerror = reject;
+                    reader.onloadend = () => {
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                        // @ts-ignore
+                        resolve(reader.result as string);
+                    };
+                });
+        });
+    }
+
     render(): JSX.Element {
-        let image: JSX.Element = (
-            <div
-                style={{
-                    height: '110px',
-                    background: 'gray',
-                    borderRadius: '3px 3px 0 0'
-                }}
-            />
+        let thumbnail: JSX.Element = (
+            <div className={styles.thumbnailPlaceholder} />
         );
         let player: JSX.Element = <></>;
 
         if (!this.state.loading) {
-            image = (
+            thumbnail = (
                 <img
                     alt=""
                     src={this.state.thumb}
                     height="110px"
-                    style={{ margin: 'auto', borderRadius: '3px 3px 0 0' }}
+                    className={styles.thumbnailStyle}
                 />
             );
         }
@@ -105,17 +104,7 @@ export default class RecordingComponent
             player = (
                 <Backdrop
                     open={true}
-                    style={{
-                        cursor: 'pointer',
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        justifyContent: 'center',
-                        width: '100vw',
-                        height: '100vh',
-                        background: 'rgba(66,66,66,0.96)',
-                        zIndex: 1500
-                    }}
+                    className={styles.playerBackdrop}
                     onClick={() => {
                         this.setState({
                             isPlaying: false
@@ -135,23 +124,11 @@ export default class RecordingComponent
                     onClick={() => {
                         this.onClick();
                     }}
-                    style={{
-                        cursor: 'pointer',
-                        position: 'relative',
-                        textAlign: 'center',
-                        height: '140px',
-                        width: '195px'
-                    }}
+                    className={styles.recording}
                 >
-                    {image}
+                    {thumbnail}
                     <YouTube
-                        style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: '42px',
-                            opacity: 0.5,
-                            fontSize: '110px'
-                        }}
+                        className={styles.recordingIcon}
                     />
                     <Typography>{moment(this.props.media.createdAt).format('DD/MM/YYYY HH:mm:ss')}</Typography>
                 </Paper>

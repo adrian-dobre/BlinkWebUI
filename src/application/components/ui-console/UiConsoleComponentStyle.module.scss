@@ -1,0 +1,15 @@
+.ui-console {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  left: 50%;
+  position: absolute;
+  top: 5px;
+  transform: translateX(-50%);
+  z-index: 1500;
+
+  .console-alert {
+    margin: 5px;
+    max-width: fit-content;
+  }
+}

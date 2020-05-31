@@ -4,10 +4,12 @@ import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withTranslation, WithTranslation } from 'react-i18next';
-import AuthRepositoryImpl from '../../../infrastructure/repositories/impl/blink/AuthRepositoryImpl';
+import { Container } from 'typedi';
 import Session from '../../../domain/entities/Session';
 import SimplePubSub, { PubSubEvent } from '../../utils/SimplePubSub';
-import AccountRepositoryImpl from '../../../infrastructure/repositories/impl/blink/AccountRepositoryImpl';
+import styles from './LoginPageStyle.module.scss';
+import { AuthRepository } from '../../../infrastructure/repositories/AuthRepository';
+import { authRepositoryToken } from '../../config/ServiceLocator';
 
 interface LoginPageState {
     username?: string;
@@ -19,7 +21,9 @@ interface LoginPageProps extends WithTranslation {
 }
 
 class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
-    constructor(props: any) {
+    authRepository: AuthRepository = Container.get(authRepositoryToken)
+
+    constructor(props: LoginPageProps) {
         super(props);
         this.state = {};
     }
@@ -32,27 +36,21 @@ class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
 
     onLogin(): void {
         if (this.state.username && this.state.password) {
-            new AuthRepositoryImpl('http://localhost:8080')
+            this.authRepository
                 .login(this.state.username, this.state.password)
-                .then((session) => new AccountRepositoryImpl('http://localhost:8080')
-                    .getAccount(session.region.tier, session.authtoken.authtoken)
-                    .then((account) => {
-                        SimplePubSub.publish(PubSubEvent.UI_CONSOLE_SUCCESS, {
-                            message: `Welcome ${account.email}`
-                        });
-                        this.props.onLogin(session);
-                    }));
+                .then((session: Session) => {
+                    SimplePubSub.publish(PubSubEvent.UI_CONSOLE_SUCCESS, {
+                        message: `Welcome ${this.state.username}`
+                    });
+                    this.props.onLogin(session);
+                });
         }
     }
 
     render(): JSX.Element {
         return (
-            <Card
-                style={{
-                    width: '500px', padding: '30px', position: 'relative', top: '150px', left: 'calc(50vw - 250px)'
-                }}
-            >
-                <Typography variant="h4" style={{ paddingBottom: '20px' }}>
+            <Card className={styles.loginCard}>
+                <Typography variant="h4" className={styles.cardTitle}>
                     {this.props.t('login-page.login-form.title')}
                 </Typography>
                 <form noValidate autoComplete="off">
@@ -63,7 +61,7 @@ class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
                         fullWidth
                         margin="dense"
                         variant="outlined"
-                        onChange={(event) => {
+                        onChange={(event): void => {
                             this.onFieldUpdate('username', event.target.value);
                         }}
                     />
@@ -75,15 +73,15 @@ class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
                         fullWidth
                         margin="dense"
                         variant="outlined"
-                        onChange={(event) => {
+                        onChange={(event): void => {
                             this.onFieldUpdate('password', event.target.value);
                         }}
                     />
-                    <div style={{ textAlign: 'right', paddingTop: '20px' }}>
+                    <div className={styles.cardActions}>
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={() => {
+                            onClick={(): void => {
                                 this.onLogin();
                             }}
                         >

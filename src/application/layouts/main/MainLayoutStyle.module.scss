@@ -3,6 +3,10 @@
 
   .app-bar {
     z-index: 1201;
+
+    .app-bar-toolbar {
+      justify-content: space-between;
+    }
   }
 
   .drawer {
@@ -25,7 +29,7 @@
         }
       }
 
-      .active {
+      :global(.active) {
         .drawer-menu-item {
           color: #2196f3;
         }
