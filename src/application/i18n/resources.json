@@ -1,6 +1,7 @@
 {
   "en": {
     "translation": {
+      "app-bar.menu-label.account.label.logout": "Logout",
       "application.title": "Blink Web",
       "cameras-page.cameras-table.header.battery": "Battery",
       "cameras-page.cameras-table.header.enabled": "Enabled",

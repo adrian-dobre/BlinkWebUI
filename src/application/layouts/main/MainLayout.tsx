@@ -43,9 +43,27 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
 
     constructor(props: DashboardLayoutProps) {
         super(props);
-        this.state = {
-            loading: false
-        };
+
+        let existingSession: Session;
+        try {
+            // eslint-disable-next-line no-undef
+            existingSession = JSON.parse(localStorage.getItem('existingSession')!) as Session;
+        } catch (e) {
+            // nothing to do, invalid/missing existingSession
+        }
+
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        if (existingSession) {
+            this.state = {
+                session: existingSession,
+                loading: false
+            };
+        } else {
+            this.state = {
+                loading: false
+            };
+        }
 
         SimplePubSub.subscribe(PubSubEvent.HTTP_REQUEST_STARTED, () => {
             this.onRequestsNumberChange();
@@ -117,6 +135,8 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
         } else {
             content = (
                 <LoginPage onLogin={(session) => {
+                    // eslint-disable-next-line no-undef
+                    localStorage.setItem('existingSession', JSON.stringify(session));
                     this.setState({
                         session: session
                     });
@@ -151,25 +171,23 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
                             keepMounted
                             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                             open={!!this.state.accountMenuAnchor}
-                            // onClose={handleMenuClose}
+                            onClose={() => {
+                                this.setState({
+                                    accountMenuAnchor: undefined
+                                });
+                            }}
                         >
                             <MenuItem
                                 onClick={() => {
+                                    // eslint-disable-next-line no-undef
+                                    localStorage.removeItem('existingSession');
                                     this.setState({
+                                        session: undefined,
                                         accountMenuAnchor: undefined
                                     });
                                 }}
                             >
-                                Profile
-                            </MenuItem>
-                            <MenuItem
-                                onClick={() => {
-                                    this.setState({
-                                        accountMenuAnchor: undefined
-                                    });
-                                }}
-                            >
-                                My account
+                                {this.props.t('app-bar.menu-label.account.label.logout')}
                             </MenuItem>
                         </Menu>
                     </Toolbar>

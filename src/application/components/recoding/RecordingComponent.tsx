@@ -50,7 +50,7 @@ export default class RecordingComponent
         });
     }
 
-    onClick(): void {
+    onRecordingClick(): void {
         this.setState({
             isPlaying: true
         });
@@ -122,7 +122,7 @@ export default class RecordingComponent
                 {player}
                 <Paper
                     onClick={() => {
-                        this.onClick();
+                        this.onRecordingClick();
                     }}
                     className={styles.recording}
                 >
