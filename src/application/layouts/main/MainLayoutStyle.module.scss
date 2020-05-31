@@ -1,5 +1,6 @@
 .dashboard-layout {
   display: flex;
+  width: 100%;
 
   .app-bar {
     z-index: 1201;
@@ -43,6 +44,8 @@
     width: 100%;
 
     .dashboard-content {
+      display: flex;
+      flex-direction: column;
       height: 100%;
     }
   }

@@ -9,7 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {
     AccountCircle,
-    Cloud, Language, Videocam, YouTube
+    Cloud, ExitToApp, Language, Videocam, YouTube
 } from '@material-ui/icons';
 import {
     NavLink, Redirect, Route, Switch
@@ -177,6 +177,9 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
                                 });
                             }}
                         >
+                            <MenuItem disabled={true}>
+                                {this.state.session?.account.email}
+                            </MenuItem>
                             <MenuItem
                                 onClick={() => {
                                     // eslint-disable-next-line no-undef
@@ -187,6 +190,7 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
                                     });
                                 }}
                             >
+                                <ExitToApp />
                                 {this.props.t('app-bar.menu-label.account.label.logout')}
                             </MenuItem>
                         </Menu>

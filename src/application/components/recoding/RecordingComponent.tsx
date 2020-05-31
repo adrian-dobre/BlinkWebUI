@@ -118,7 +118,7 @@ export default class RecordingComponent
         }
 
         return (
-            <>
+            <div className={styles.recordingComponent}>
                 {player}
                 <Paper
                     onClick={() => {
@@ -132,7 +132,7 @@ export default class RecordingComponent
                     />
                     <Typography>{moment(this.props.media.createdAt).format('DD/MM/YYYY HH:mm:ss')}</Typography>
                 </Paper>
-            </>
+            </div>
         );
     }
 }

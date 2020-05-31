@@ -42,6 +42,8 @@ class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
                     SimplePubSub.publish(PubSubEvent.UI_CONSOLE_SUCCESS, {
                         message: `Welcome ${this.state.username}`
                     });
+                    // eslint-disable-next-line no-param-reassign
+                    session.account.email = this.state.username;
                     this.props.onLogin(session);
                 });
         }

@@ -1,5 +1,7 @@
 .dashboard-page {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 64px);
 
   .page-title-wrapper {
     margin-bottom: 3px;
@@ -23,7 +25,6 @@
   }
 
   .page-content {
-    height: 100%;
     overflow-y: auto;
     padding: 20px;
   }
