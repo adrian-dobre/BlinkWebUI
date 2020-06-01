@@ -8,7 +8,7 @@ allow a subset of actions to be performed via a computer browser.
 #### Description
 This is the front-end component of the portal. It's a simple app written in Typescript, using React. It uses MaterialUI
 as design system. Unfortunately Blink does not provide API documentation, as a result everything is a result of 
-reverse-engineering the mobile app API calls (I will provide the information I managed to extract). I tested the app
+reverse-engineering the mobile app API calls ([this is the documentation I managed to extract](https://github.com/adrian-dobre/BlinkWebService/blob/master/BlinkForHomeApiDocumentation.md)). I tested the app
 only on european servers using a Blink XT2 camera (the only one I own).
 The backend can be found here: https://github.com/adrian-dobre/BlinkWebService.
 
