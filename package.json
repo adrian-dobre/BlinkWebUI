@@ -39,7 +39,6 @@
     "stylelint-config-sass-guidelines": "^7.0.0",
     "stylelint-scss": "^3.17.0",
     "stylelint-webpack-plugin": "^1.2.3",
-    "ts-import-plugin": "^1.6.6",
     "ts-loader": "^7.0.0",
     "typescript": "^3.8.3",
     "webpack": "^4.42.1",

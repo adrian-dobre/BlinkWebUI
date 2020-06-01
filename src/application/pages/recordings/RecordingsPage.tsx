@@ -6,8 +6,8 @@
  */
 
 import React, { PropsWithChildren } from 'react';
-import { Grid } from '@material-ui/core';
-import { YouTube } from '@material-ui/icons';
+import Grid from '@material-ui/core/Grid';
+import YouTube from '@material-ui/icons/YouTube';
 import moment from 'moment';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { Container } from 'typedi';

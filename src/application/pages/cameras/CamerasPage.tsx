@@ -6,15 +6,19 @@
  */
 
 import React, { PropsWithChildren } from 'react';
-import {
-    Paper, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
-} from '@material-ui/core';
-import { Videocam } from '@material-ui/icons';
+import Paper from '@material-ui/core/Paper';
+import Switch from '@material-ui/core/Switch';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Videocam from '@material-ui/icons/Videocam';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import { Container } from 'typedi';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
 import Session from '../../../domain/entities/Session';
-import CameraRepositoryImpl from '../../../infrastructure/repositories/impl/blink/CameraRepositoryImpl';
 import Camera from '../../../domain/entities/Camera';
 import SignalIndicatorComponent from '../../components/signal-indicator/SignalIndicatorComponent';
 import BatteryIndicatorComponent from '../../components/battery-indicator/BatteryIndicatorComponent';

@@ -69,14 +69,17 @@ export class BaseServiceClient {
             },
             baseURL: this.baseUrl
         })
-            .then((response: any) => {
+            .then((response: AxiosResponse) => {
                 SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_SUCCESS, response);
                 SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_ENDED, response);
                 return response;
             })
-            .catch((reason: any) => {
+            .catch((reason: AxiosError) => {
                 SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_FAILED, reason);
                 SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_ENDED, reason);
+                if (reason.response && [401, 403].includes(reason.response.status)) {
+                    SimplePubSub.publish(PubSubEvent.HTTP_REQUEST_UNAUTHORIZED, reason);
+                }
                 throw reason;
             });
     }

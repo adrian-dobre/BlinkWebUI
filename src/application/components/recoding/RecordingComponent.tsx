@@ -6,8 +6,9 @@
  */
 
 import React, { PropsWithChildren } from 'react';
-import { Backdrop, Paper } from '@material-ui/core';
-import { YouTube } from '@material-ui/icons';
+import Backdrop from '@material-ui/core/Backdrop';
+import Paper from '@material-ui/core/Paper';
+import YouTube from '@material-ui/icons/YouTube';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import { Container } from 'typedi';

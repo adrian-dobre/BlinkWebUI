@@ -30,6 +30,9 @@ module.exports = {
         "lines-between-class-members": "off",
         "max-classes-per-file": "off"
     },
+    globals: {
+        "window": true
+    },
     settings: {
         react: {
             version: "detect"

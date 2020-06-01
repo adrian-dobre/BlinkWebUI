@@ -6,14 +6,12 @@
  */
 
 import React from 'react';
-import {
-    SignalWifi0Bar,
-    SignalWifi1Bar,
-    SignalWifi2Bar,
-    SignalWifi3Bar,
-    SignalWifi4Bar,
-    SignalWifiOff
-} from '@material-ui/icons';
+import SignalWifi0Bar from '@material-ui/icons/SignalWifi0Bar';
+import SignalWifi1Bar from '@material-ui/icons/SignalWifi1Bar';
+import SignalWifi2Bar from '@material-ui/icons/SignalWifi2Bar';
+import SignalWifi3Bar from '@material-ui/icons/SignalWifi3Bar';
+import SignalWifi4Bar from '@material-ui/icons/SignalWifi4Bar';
+import SignalWifiOff from '@material-ui/icons/SignalWifiOff';
 
 interface SignalIndicatorComponentProps {
     strength: number;

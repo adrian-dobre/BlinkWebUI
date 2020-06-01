@@ -19,11 +19,6 @@ const webpackConfig = {
     resolve: {
         extensions: ['.js', '.ts', '.tsx']
     },
-    optimization: {
-        splitChunks: {
-            chunks: 'all'
-        }
-    },
     module: {
         rules: [
             {
@@ -79,6 +74,10 @@ const webpackConfig = {
             allowEmptyInput: true
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+        new webpack.IgnorePlugin(
+            /youtube|dailymotion|vimeo|facebook|twitch|soundcloud|mixcloud|wistia|vidyard/i,
+            /react-player/
+        ),
         new MiniCssExtractPlugin(),
         new ManifestPlugin({
             fileName: 'asset-manifest.json',

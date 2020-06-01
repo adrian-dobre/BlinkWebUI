@@ -14,16 +14,19 @@ import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import {
-    AccountCircle,
-    Cloud, ExitToApp, Language, Videocam, YouTube
-} from '@material-ui/icons';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import Cloud from '@material-ui/icons/Cloud';
+import ExitToApp from '@material-ui/icons/ExitToApp';
+import Language from '@material-ui/icons/Language';
+import Videocam from '@material-ui/icons/Videocam';
+import YouTube from '@material-ui/icons/YouTube';
 import {
     NavLink, Redirect, Route, Switch
 } from 'react-router-dom';
-import {
-    IconButton, LinearProgress, Menu, MenuItem
-} from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { WithTranslation, withTranslation } from 'react-i18next';
 import styles from './MainLayoutStyle.module.scss';
 import SimplePubSub, { PubSubEvent } from '../../utils/SimplePubSub';
@@ -51,26 +54,11 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
     constructor(props: DashboardLayoutProps) {
         super(props);
 
-        let existingSession: Session;
-        try {
-            // eslint-disable-next-line no-undef
-            existingSession = JSON.parse(localStorage.getItem('existingSession')!) as Session;
-        } catch (e) {
-            // nothing to do, invalid/missing existingSession
-        }
+        this.state = {
+            loading: false
+        };
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-        // @ts-ignore
-        if (existingSession) {
-            this.state = {
-                session: existingSession,
-                loading: false
-            };
-        } else {
-            this.state = {
-                loading: false
-            };
-        }
+        this.loadExistingSession();
 
         SimplePubSub.subscribe(PubSubEvent.HTTP_REQUEST_STARTED, () => {
             this.onRequestsNumberChange();
@@ -83,6 +71,16 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
         SimplePubSub.subscribe(PubSubEvent.HTTP_REQUEST_FAILED, (ev) => {
             UiConsoleComponent.showMessage(UIConsoleAlertType.ERROR, ev.message ?? '');
         });
+
+        SimplePubSub.subscribe(PubSubEvent.HTTP_REQUEST_UNAUTHORIZED, () => {
+            this.onLogout();
+        });
+    }
+
+    onDismissMenu() {
+        this.setState({
+            accountMenuAnchor: undefined
+        });
     }
 
     onRequestsNumberChange(requestCompleted = false): void {
@@ -91,6 +89,32 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
             this.setState({
                 loading: this.requestsInProgress > 0
             });
+        }
+    }
+
+    onLogin(session: Session): void {
+        window.localStorage.setItem('existingSession', JSON.stringify(session));
+        this.setState({
+            session: session
+        });
+    }
+
+    onLogout(): void {
+        window.localStorage.removeItem('existingSession');
+        this.setState({
+            session: undefined
+        });
+    }
+
+    loadExistingSession(): void {
+        let existingSession: Session;
+        try {
+            existingSession = JSON.parse(window.localStorage.getItem('existingSession')!) as Session;
+            this.setState({
+                session: existingSession
+            });
+        } catch (e) {
+            // nothing to do, invalid/missing existingSession
         }
     }
 
@@ -142,11 +166,7 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
         } else {
             content = (
                 <LoginPage onLogin={(session) => {
-                    // eslint-disable-next-line no-undef
-                    localStorage.setItem('existingSession', JSON.stringify(session));
-                    this.setState({
-                        session: session
-                    });
+                    this.onLogin(session);
                 }}
                 />
             );
@@ -162,7 +182,7 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
                         {this.state.session && (
                             <IconButton
                                 edge="end"
-                                onClick={(ev) => {
+                                onClick={(ev): void => {
                                     this.setState({
                                         accountMenuAnchor: ev.currentTarget
                                     });
@@ -178,23 +198,17 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
                             keepMounted
                             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                             open={!!this.state.accountMenuAnchor}
-                            onClose={() => {
-                                this.setState({
-                                    accountMenuAnchor: undefined
-                                });
+                            onClose={(): void => {
+                                this.onDismissMenu();
                             }}
                         >
                             <MenuItem disabled={true}>
                                 {this.state.session?.account.email}
                             </MenuItem>
                             <MenuItem
-                                onClick={() => {
-                                    // eslint-disable-next-line no-undef
-                                    localStorage.removeItem('existingSession');
-                                    this.setState({
-                                        session: undefined,
-                                        accountMenuAnchor: undefined
-                                    });
+                                onClick={(): void => {
+                                    this.onDismissMenu();
+                                    this.onLogout();
                                 }}
                             >
                                 <ExitToApp />

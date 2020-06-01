@@ -7,8 +7,8 @@
 
 import React from 'react';
 
-import { Grow } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import Grow from '@material-ui/core/Grow';
+import Alert from '@material-ui/lab/Alert';
 import { v4 } from 'uuid';
 import SimplePubSub, { PubSubEvent } from '../../utils/SimplePubSub';
 import styles from './UiConsoleComponentStyle.module.scss';

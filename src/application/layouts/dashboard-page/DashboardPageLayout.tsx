@@ -6,7 +6,8 @@
  */
 
 import React, { PropsWithChildren } from 'react';
-import { Paper, Typography } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import styles from './DashboardPageLayoutStyle.module.scss';
 import LoadingComponent from '../../components/loading/LoadingComponent';

@@ -6,11 +6,9 @@
  */
 
 import React from 'react';
-import {
-    Battery50,
-    BatteryAlert,
-    BatteryFull
-} from '@material-ui/icons';
+import Battery50 from '@material-ui/icons/Battery50';
+import BatteryAlert from '@material-ui/icons/BatteryAlert';
+import BatteryFull from '@material-ui/icons/BatteryFull';
 
 interface SignalIndicatorComponentProps {
     strength: number;

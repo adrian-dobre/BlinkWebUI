@@ -7,8 +7,10 @@
 
 import 'reflect-metadata';
 import * as React from 'react';
-import { ThemeProvider } from '@material-ui/core/styles';
-import { CssBaseline } from '@material-ui/core';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import ThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { hot } from 'react-hot-loader/root';
 import { I18nextProvider } from 'react-i18next';
