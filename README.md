@@ -45,3 +45,5 @@ not figure it out (as stated before, there is no documentation for 3rd party dev
 This work represents a personal effort, developed in my spare time and while I have every intention to further develop
 this solution, I cannot offer any guarantees. However, anybody can just grab the code and do whatever they want with it
 (it is released under GPL v3 license)
+
+If you'd like to support my work you could [buy me a beer](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=E6MU9855FNXYL&source=url).
