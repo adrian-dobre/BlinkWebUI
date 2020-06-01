@@ -20,6 +20,9 @@ In order to build the app, you need NodeJS installed on your computer. Steps to 
 
 A new build will be outputted in `dist` directory.
 
+#### Releases
+You can download a pre-built release from here: https://drive.google.com/drive/folders/1w6ZteA14Bhb52HeKeLxHJfP0sNiNsaM3?usp=sharing
+
 #### Running
 For running the app, please see the README.md file of the backed: https://github.com/adrian-dobre/BlinkWebService.
 
