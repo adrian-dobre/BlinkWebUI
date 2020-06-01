@@ -49,16 +49,27 @@ interface DashboardLayoutState {
 }
 
 class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutProps>, DashboardLayoutState> {
+    static loadExistingSession(): Session | undefined {
+        let existingSession: Session;
+        try {
+            existingSession = JSON.parse(window.localStorage.getItem('existingSession')!) as Session;
+        } catch (e) {
+            // nothing to do, invalid/missing existingSession
+        }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+        // @ts-ignore
+        return existingSession;
+    }
+
     private requestsInProgress = 0;
 
     constructor(props: DashboardLayoutProps) {
         super(props);
 
         this.state = {
-            loading: false
+            loading: false,
+            session: MainLayout.loadExistingSession()
         };
-
-        this.loadExistingSession();
 
         SimplePubSub.subscribe(PubSubEvent.HTTP_REQUEST_STARTED, () => {
             this.onRequestsNumberChange();
@@ -104,18 +115,6 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
         this.setState({
             session: undefined
         });
-    }
-
-    loadExistingSession(): void {
-        let existingSession: Session;
-        try {
-            existingSession = JSON.parse(window.localStorage.getItem('existingSession')!) as Session;
-            this.setState({
-                session: existingSession
-            });
-        } catch (e) {
-            // nothing to do, invalid/missing existingSession
-        }
     }
 
     render(): JSX.Element {
