@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
-    "dev": "webpack-dev-server --hot --open",
-    "lint": "tsc --noEmit && eslint ./src --ext .js --ext .ts --ext .tsx --quiet --fix && stylelint '**/*.scss'",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "NODE_ENV=production webpack",
+    "dev": "webpack-dev-server --hot --open"
   },
   "author": "",
   "license": "ISC",
@@ -47,7 +45,8 @@
     "webpack": "^4.42.1",
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-server": "^3.10.3",
+    "webpack-manifest-plugin": "^2.2.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.9.11",

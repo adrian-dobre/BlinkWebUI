@@ -1,27 +1,28 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const StylelintPlugin = require('stylelint-webpack-plugin');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+const ManifestPlugin = require('webpack-manifest-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const webpack = require('webpack');
 
 const devMode = process.env.NODE_ENV !== 'production';
 
-module.exports = {
+const webpackConfig = {
     entry: [path.resolve(__dirname, 'src', 'index.tsx')],
     output: {
         filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist')
     },
-    // devtool: devMode ? 'source-map' : '',
+    devtool: 'source-map',
     resolve: {
         extensions: ['.js', '.ts', '.tsx']
+    },
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
     },
     module: {
         rules: [
@@ -79,6 +80,24 @@ module.exports = {
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
         new MiniCssExtractPlugin(),
+        new ManifestPlugin({
+            fileName: 'asset-manifest.json',
+            generate: (seed, files, entrypoints) => {
+                const manifestFiles = files.reduce((manifest, file) => {
+                    // eslint-disable-next-line no-param-reassign
+                    manifest[file.name] = file.path;
+                    return manifest;
+                }, seed);
+                const entrypointFiles = entrypoints.main.filter(
+                    (fileName) => !fileName.endsWith('.map')
+                );
+
+                return {
+                    files: manifestFiles,
+                    entrypoints: entrypointFiles
+                };
+            }
+        })
         // new BundleAnalyzerPlugin()
     ],
     devServer: {
@@ -89,3 +108,5 @@ module.exports = {
         port: 8888
     }
 };
+
+module.exports = webpackConfig;

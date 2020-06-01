@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020 Adrian Dobre - GPL v3 License.
+ *
+ * This file is subject to the terms and conditions defined in
+ * the 'LICENSE.txt' file, which is part of this source code package.
+ */
+
 import { MediaRepository } from '../../MediaRepository';
 import Media from '../../../../domain/entities/Media';
 import { BaseServiceClient } from '../../../helpers/BaseServiceClient';

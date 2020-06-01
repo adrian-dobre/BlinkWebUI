@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020 Adrian Dobre - GPL v3 License.
+ *
+ * This file is subject to the terms and conditions defined in
+ * the 'LICENSE.txt' file, which is part of this source code package.
+ */
+
 import React, { PropsWithChildren } from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import { withTranslation, WithTranslation } from 'react-i18next';

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2020 Adrian Dobre - GPL v3 License.
+ *
+ * This file is subject to the terms and conditions defined in
+ * the 'LICENSE.txt' file, which is part of this source code package.
+ */
+
 import React, { PropsWithChildren } from 'react';
 import { Grid } from '@material-ui/core';
 import { YouTube } from '@material-ui/icons';
