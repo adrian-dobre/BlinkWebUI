@@ -1,4 +1,4 @@
-#Blink Web UI (front-end)
+# Blink Web UI (front-end)
 
 #### Project
 Attempt to build a web portal for Blink (https://blinkforhome.com) products. Currently, the only way to view and 
