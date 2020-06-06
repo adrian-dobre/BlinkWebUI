@@ -6,7 +6,16 @@
  */
 
 import Network from '../../domain/entities/Network';
+import CommandStatus from '../../domain/entities/CommandStatus';
 
 export interface NetworkRepository {
     getNetworkList(regionId: string, accountId: string, authToken: string): Promise<Network[]>;
+    armNetwork(regionId: string, accountId: string, networkId: string, authToken: string): Promise<CommandStatus>;
+    disarmNetwork(regionId: string, accountId: string, networkId: string, authToken: string): Promise<CommandStatus>;
+    getNetworkCommandStatus(
+        regionId: string,
+        networkId: string,
+        commandId: string,
+        authToken: string
+    ): Promise<CommandStatus>;
 }

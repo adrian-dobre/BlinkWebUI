@@ -6,7 +6,16 @@
  */
 
 import Camera from '../../domain/entities/Camera';
+import CommandStatus from '../../domain/entities/CommandStatus';
+import CameraSettings from '../../domain/entities/CameraSettings';
 
 export interface CameraRepository {
     getCameraList(regionId: string, accountId: string, authToken: string): Promise<Camera[]>;
+    updateCameraSettings(
+        regionId: string,
+        networkId: string,
+        cameraId: string,
+        cameraSettings: CameraSettings,
+        authToken: string
+    ): Promise<CommandStatus>;
 }

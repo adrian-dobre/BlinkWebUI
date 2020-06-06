@@ -1,0 +1,27 @@
+/*!
+ * Copyright (c) 2020 Adrian Dobre - GPL v3 License.
+ *
+ * This file is subject to the terms and conditions defined in
+ * the 'LICENSE.txt' file, which is part of this source code package.
+ */
+
+.recordings-page {
+  .recordings-section {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    margin: 0 0 20px;
+    padding: 5px 10px;
+
+    .section-title {
+      margin-top: 10px;
+
+      .icon {
+        margin-right: 10px;
+        vertical-align: text-bottom;
+      }
+    }
+
+    .recordings-grid {
+      margin: 10px 0;
+    }
+  }
+}

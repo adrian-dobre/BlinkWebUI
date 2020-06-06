@@ -129,6 +129,7 @@ export default class RecordingComponent
             <div className={styles.recordingComponent}>
                 {player}
                 <Paper
+                    elevation={0}
                     onClick={() => {
                         this.onRecordingClick();
                     }}
@@ -138,7 +139,7 @@ export default class RecordingComponent
                     <YouTube
                         className={styles.recordingIcon}
                     />
-                    <Typography>{moment(this.props.media.createdAt).format('DD/MM/YYYY HH:mm:ss')}</Typography>
+                    <Typography>{moment(this.props.media.createdAt).format('MMM Do YYYY HH:mm:ss')}</Typography>
                 </Paper>
             </div>
         );

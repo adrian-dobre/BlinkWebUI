@@ -11,16 +11,21 @@ import YouTube from '@material-ui/icons/YouTube';
 import moment from 'moment';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { Container } from 'typedi';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Today from '@material-ui/icons/Today';
 import DashboardPageLayout from '../../layouts/dashboard-page/DashboardPageLayout';
 import Media from '../../../domain/entities/Media';
 import RecordingComponent from '../../components/recoding/RecordingComponent';
 import Session from '../../../domain/entities/Session';
 import { MediaRepository } from '../../../infrastructure/repositories/MediaRepository';
 import { mediaRepositoryToken } from '../../config/ServiceLocator';
+import styles from './RecordingsPage.module.scss';
 
 interface RecordingsPageState {
     recordings: Media[];
     loading: boolean;
+    recordingSets: { [k: string]: Media[] };
 }
 
 interface RecordingsPageProps extends WithTranslation {
@@ -35,7 +40,8 @@ class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPagePro
         super(props);
         this.state = {
             recordings: [],
-            loading: true
+            loading: true,
+            recordingSets: {}
         };
     }
 
@@ -62,6 +68,20 @@ class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPagePro
                     // eslint-disable-next-line no-plusplus,no-param-reassign
                     return this.getRecordingsList(++page);
                 }
+                this.setState((previousState) => {
+                    const recSet: { [k: string]: Media[] } = {};
+                    previousState.recordings.forEach((recording) => {
+                        const recKey = moment(recording.createdAt).format('MMM Do YYYY');
+                        if (!recSet[recKey]) {
+                            recSet[recKey] = [];
+                        }
+                        recSet[recKey].push(recording);
+                    });
+                    return {
+                        loading: false,
+                        recordingSets: recSet
+                    };
+                });
             });
     }
 
@@ -71,22 +91,44 @@ class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPagePro
                 loading={this.state.loading}
                 title={this.props.t('recordings-page.title')}
                 icon={<YouTube />}
+                className={styles.recordingsPage}
             >
-                <Grid container spacing={2}>
-                    {this
-                        .state
-                        .recordings
-                        .map((recording, index) => (
-                            // eslint-disable-next-line react/no-array-index-key
-                            <Grid key={index} item>
-                                <RecordingComponent
-                                    session={this.props.session}
-                                    media={recording}
-                                    regionId={this.props.session.region.tier}
+
+                {Object.keys(this
+                    .state
+                    .recordingSets)
+                    .map((recordingKey) => (
+                        <Paper
+                            key={recordingKey}
+                            elevation={0}
+                            className={styles.recordingsSection}
+                        >
+                            <Typography
+                                variant="h6"
+                                className={styles.sectionTitle}
+                            >
+                                <Today
+                                    className={styles.icon}
                                 />
+                                {recordingKey}
+                            </Typography>
+                            <Grid
+                                container
+                                spacing={2}
+                                className={styles.recordingsGrid}
+                            >
+                                {this.state.recordingSets[recordingKey].map((recording) => (
+                                    <Grid key={recording.id} item>
+                                        <RecordingComponent
+                                            session={this.props.session}
+                                            media={recording}
+                                            regionId={this.props.session.region.tier}
+                                        />
+                                    </Grid>
+                                ))}
                             </Grid>
-                        ))}
-                </Grid>
+                        </Paper>
+                    ))}
             </DashboardPageLayout>
         );
     }

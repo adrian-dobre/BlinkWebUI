@@ -8,13 +8,16 @@
 .recording-component {
   .thumbnail-placeholder {
     background: #808080;
-    border-radius: 3px 3px 0 0;
+    border-radius: 3px;
+    display: block;
     height: 110px;
+    margin: 0 auto 10px;
   }
 
   .thumbnail-style {
-    border-radius: 3px 3px 0 0;
-    margin: auto;
+    border-radius: 3px;
+    display: block;
+    margin: 0 auto 10px;
   }
 
   .player-backdrop {
