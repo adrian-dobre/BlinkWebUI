@@ -8,6 +8,7 @@
 import { BaseServiceClient } from '../../../helpers/BaseServiceClient';
 import { NetworkRepository } from '../../NetworkRepository';
 import Network from '../../../../domain/entities/Network';
+import CommandStatus from '../../../../domain/entities/CommandStatus';
 
 export default class NetworkRepositoryImpl implements NetworkRepository {
     baseUrl: string;
@@ -30,5 +31,49 @@ export default class NetworkRepositoryImpl implements NetworkRepository {
                 .data
                 .networks
                 .map((network: Network) => new Network(network)));
+    }
+
+    armNetwork(regionId: string, accountId: string, networkId: string, authToken: string): Promise<CommandStatus> {
+        return new BaseServiceClient(this.baseUrl)
+            .post(
+                `/regions/${regionId}/accounts/${accountId}/networks/${networkId}/state/arm`,
+                {
+                    headers: {
+                        authToken: authToken
+                    }
+                }
+            )
+            .then((response) => response.data);
+    }
+
+    disarmNetwork(regionId: string, accountId: string, networkId: string, authToken: string): Promise<CommandStatus> {
+        return new BaseServiceClient(this.baseUrl)
+            .post(
+                `/regions/${regionId}/accounts/${accountId}/networks/${networkId}/state/disarm`,
+                {
+                    headers: {
+                        authToken: authToken
+                    }
+                }
+            )
+            .then((response) => response.data);
+    }
+
+    getNetworkCommandStatus(
+        regionId: string,
+        networkId: string,
+        commandId: string,
+        authToken: string
+    ): Promise<CommandStatus> {
+        return new BaseServiceClient(this.baseUrl)
+            .get(
+                `/regions/${regionId}/networks/${networkId}/commands/${commandId}`,
+                {
+                    headers: {
+                        authToken: authToken
+                    }
+                }
+            )
+            .then((response) => response.data);
     }
 }

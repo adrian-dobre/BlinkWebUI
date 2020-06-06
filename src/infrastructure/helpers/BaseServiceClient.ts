@@ -91,4 +91,8 @@ export class BaseServiceClient {
     post(path?: string, config: AxiosRequestConfig = {}): Promise<BaseServiceResponse> {
         return this.baseRequest({ ...config, url: path, method: 'POST' });
     }
+
+    put(path?: string, config: AxiosRequestConfig = {}): Promise<BaseServiceResponse> {
+        return this.baseRequest({ ...config, url: path, method: 'PUT' });
+    }
 }

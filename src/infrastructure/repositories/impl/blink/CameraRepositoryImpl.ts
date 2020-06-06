@@ -8,6 +8,8 @@
 import { BaseServiceClient } from '../../../helpers/BaseServiceClient';
 import { CameraRepository } from '../../CameraRepository';
 import Camera from '../../../../domain/entities/Camera';
+import CommandStatus from '../../../../domain/entities/CommandStatus';
+import CameraSettings from '../../../../domain/entities/CameraSettings';
 
 export default class CameraRepositoryImpl implements CameraRepository {
     baseUrl: string;
@@ -30,5 +32,25 @@ export default class CameraRepositoryImpl implements CameraRepository {
                 .data
                 .cameras
                 .map((camera: Camera) => new Camera(camera)));
+    }
+
+    updateCameraSettings(
+        regionId: string,
+        networkId: string,
+        cameraId: string,
+        cameraSettings: CameraSettings,
+        authToken: string
+    ): Promise<CommandStatus> {
+        return new BaseServiceClient(this.baseUrl)
+            .put(
+                `/regions/${regionId}/networks/${networkId}/cameras/${cameraId}/settings`,
+                {
+                    headers: {
+                        authToken: authToken
+                    },
+                    data: cameraSettings
+                }
+            )
+            .then((response) => response.data);
     }
 }

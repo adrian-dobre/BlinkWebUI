@@ -7,7 +7,6 @@
 
 import React, { PropsWithChildren } from 'react';
 import Paper from '@material-ui/core/Paper';
-import Switch from '@material-ui/core/Switch';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -25,6 +24,9 @@ import BatteryIndicatorComponent from '../../components/battery-indicator/Batter
 import styles from './CamerasPageStyle.module.scss';
 import { cameraRepositoryToken } from '../../config/ServiceLocator';
 import { CameraRepository } from '../../../infrastructure/repositories/CameraRepository';
+import CommandStatus from '../../../domain/entities/CommandStatus';
+import Utils from '../../../infrastructure/helpers/Utils';
+import AsyncSwitchComponent from '../../components/async-switch/AsyncSwitchComponent';
 
 interface CamerasPageState {
     cameras: Camera[];
@@ -43,7 +45,7 @@ function getCelsiusTemp(fahrenheitTemp: number): number {
 class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps>, CamerasPageState> {
     cameraRepository: CameraRepository = Container.get(cameraRepositoryToken);
 
-    constructor(props: any) {
+    constructor(props: CamerasPageProps) {
         super(props);
         this.state = {
             cameras: [],
@@ -53,6 +55,59 @@ class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps
 
     componentDidMount(): void {
         this.getCameraList();
+    }
+
+    onCameraEnable(camera: Camera): Promise<CommandStatus> {
+        return this.cameraRepository
+            .updateCameraSettings(
+                this.props.session.region.tier,
+                camera.networkId.toString(),
+                camera.id.toString(),
+                {
+                    motionAlert: true
+                },
+                this.props.session.authtoken.authtoken
+            );
+    }
+
+    onCameraDisable(camera: Camera): Promise<CommandStatus> {
+        return this.cameraRepository
+            .updateCameraSettings(
+                this.props.session.region.tier,
+                camera.networkId.toString(),
+                camera.id.toString(),
+                {
+                    motionAlert: false
+                },
+                this.props.session.authtoken.authtoken
+            );
+    }
+
+    onCameraEnableToggleChange(camera: Camera): Promise<void> {
+        let request;
+        if (camera.enabled) {
+            request = this.onCameraDisable(camera);
+        } else {
+            request = this.onCameraEnable(camera);
+        }
+        return request
+            .then((commandStatus: CommandStatus) => Utils.checkCommandStatus(
+                this.props.session.region.tier,
+                camera.networkId.toString(),
+                commandStatus,
+                this.props.session.authtoken.authtoken
+            ))
+            .then(() => {
+                this.setState((prevState) => ({
+                    cameras: prevState.cameras.map((cam) => {
+                        if (cam === camera) {
+                            // eslint-disable-next-line no-param-reassign
+                            cam.enabled = !camera.enabled;
+                        }
+                        return cam;
+                    })
+                }));
+            });
     }
 
     getCameraList(): Promise<any> {
@@ -96,7 +151,7 @@ class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps
                                 <TableCell align="center">
                                     {this.props.t('cameras-page.cameras-table.header.temperature')}
                                 </TableCell>
-                                <TableCell align="center">
+                                <TableCell className={styles.enabledColumn}>
                                     {this.props.t('cameras-page.cameras-table.header.enabled')}
                                 </TableCell>
                             </TableRow>
@@ -121,9 +176,9 @@ class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps
                                         {getCelsiusTemp(row.signals.temp)}
                                         °C
                                     </TableCell>
-                                    <TableCell align="center">
-                                        <Switch
-                                            disabled
+                                    <TableCell>
+                                        <AsyncSwitchComponent
+                                            onChange={(): Promise<void> => this.onCameraEnableToggleChange(row)}
                                             checked={row.enabled}
                                             color="primary"
                                         />

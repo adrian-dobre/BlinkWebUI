@@ -20,6 +20,7 @@ import ExitToApp from '@material-ui/icons/ExitToApp';
 import Language from '@material-ui/icons/Language';
 import Videocam from '@material-ui/icons/Videocam';
 import YouTube from '@material-ui/icons/YouTube';
+import CameraIcon from '@material-ui/icons/Camera';
 import {
     NavLink, Redirect, Route, Switch
 } from 'react-router-dom';
@@ -176,6 +177,9 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
                 <AppBar className={styles.appBar} position="fixed">
                     <Toolbar className={styles.appBarToolbar}>
                         <Typography variant="h4" noWrap>
+                            <CameraIcon
+                                className={styles.titleIcon}
+                            />
                             {this.props.t('application.title')}
                         </Typography>
                         {this.state.session && (
