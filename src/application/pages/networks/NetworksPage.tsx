@@ -35,7 +35,6 @@ interface NetworksPageProps extends WithTranslation {
     session: Session;
 }
 
-
 class NetworksPage extends React.PureComponent<PropsWithChildren<NetworksPageProps>, NetworksPageState> {
     networkRepository: NetworkRepository = Container.get(networkRepositoryToken);
 

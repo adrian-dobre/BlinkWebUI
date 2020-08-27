@@ -31,7 +31,6 @@ export interface UiConsoleComponentState {
     alerts: UIConsoleAlert[];
 }
 
-
 export default class UiConsoleComponent extends React.PureComponent<{}, UiConsoleComponentState> {
     private static eventsToTypeMap: { [k in PubSubEvent]?: UIConsoleAlert['type'] } = {
         [PubSubEvent.UI_CONSOLE_ERROR]: UIConsoleAlertType.ERROR,
