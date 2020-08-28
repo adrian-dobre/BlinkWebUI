@@ -7,5 +7,5 @@
 
 // eslint-disable-next-line import/prefer-default-export
 export const config = {
-    baseUrl: ''
+    baseUrl: 'http://localhost:8080'
 };

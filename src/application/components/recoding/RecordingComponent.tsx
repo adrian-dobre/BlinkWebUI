@@ -12,6 +12,8 @@ import YouTube from '@material-ui/icons/YouTube';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import { Container } from 'typedi';
+import Checkbox, { CheckboxProps } from '@material-ui/core/Checkbox';
+import withStyles from '@material-ui/core/styles/withStyles';
 import Media from '../../../domain/entities/Media';
 import Session from '../../../domain/entities/Session';
 import VideoPlayerComponent from '../video-player/VideoPlayerComponent';
@@ -25,13 +27,26 @@ interface RecordingComponentState {
     media?: string;
     loading: boolean;
     isPlaying: boolean;
+    selected: boolean;
 }
 
 interface RecordingComponentProps {
     regionId: string;
     media: Media;
     session: Session;
+    onSelected?: (added: boolean) => void;
 }
+
+const WhiteCheckbox = withStyles({
+    root: {
+        color: '#ffffff',
+        '&$checked': {
+            color: '#ffffff'
+        }
+    },
+    checked: {}
+// eslint-disable-next-line react/jsx-props-no-spreading
+})((props: CheckboxProps) => <Checkbox color="default" {...props} />);
 
 export default class RecordingComponent
     extends React.Component<PropsWithChildren<RecordingComponentProps>, RecordingComponentState> {
@@ -40,6 +55,7 @@ export default class RecordingComponent
     constructor(props: RecordingComponentProps) {
         super(props);
         this.state = {
+            selected: false,
             loading: true,
             isPlaying: false
         };
@@ -73,6 +89,18 @@ export default class RecordingComponent
         });
     }
 
+    onRecordingSelected(): void {
+        this.setState((prevState) => {
+            if (this.props.onSelected) {
+                this.props.onSelected(!prevState.selected);
+            }
+            return {
+                selected: !prevState.selected
+            };
+        });
+    }
+
+
     getMedia(region: string, mediaPath: string, authToken: string): Promise<string> {
         return new Promise((resolve, reject) => {
             this.mediaRepository
@@ -82,7 +110,7 @@ export default class RecordingComponent
                     const reader = new FileReader();
                     reader.readAsDataURL(thumb);
                     reader.onerror = reject;
-                    reader.onloadend = () => {
+                    reader.onloadend = (): void => {
                         // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
                         // @ts-ignore
                         resolve(reader.result as string);
@@ -113,7 +141,7 @@ export default class RecordingComponent
                 <Backdrop
                     open={true}
                     className={styles.playerBackdrop}
-                    onClick={() => {
+                    onClick={(): void => {
                         this.setState({
                             isPlaying: false
                         });
@@ -130,7 +158,7 @@ export default class RecordingComponent
                 {player}
                 <Paper
                     elevation={0}
-                    onClick={() => {
+                    onClick={(): void => {
                         this.onRecordingClick();
                     }}
                     className={styles.recording}
@@ -138,6 +166,17 @@ export default class RecordingComponent
                     {thumbnail}
                     <YouTube
                         className={styles.recordingIcon}
+                    />
+                    <WhiteCheckbox
+                        className={styles.recordingCheckmark}
+                        checked={this.state.selected}
+                        onChange={(): void => {
+                            this.onRecordingSelected();
+                        }}
+                        onClick={(event: { stopPropagation: () => void }): void => {
+                            event.stopPropagation();
+                        }}
+                        color="primary"
                     />
                     <Typography>{moment(this.props.media.createdAt).format('MMM Do YYYY HH:mm:ss')}</Typography>
                 </Paper>
