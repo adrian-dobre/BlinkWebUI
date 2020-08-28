@@ -34,7 +34,6 @@ interface SyncModulesPageProps extends WithTranslation{
     session: Session;
 }
 
-
 class SyncModulesPage extends React.PureComponent<PropsWithChildren<SyncModulesPageProps>, SyncModulesPageState> {
     syncModuleRepository: SyncModuleRepository = Container.get(syncModuleRepositoryToken);
 
