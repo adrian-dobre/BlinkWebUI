@@ -26,6 +26,11 @@ You can download a pre-built release from here: https://drive.google.com/drive/f
 #### Running
 For running the app, please see the README.md file of the backed: https://github.com/adrian-dobre/BlinkWebService.
 
+#### Try it out online
+You can try a build of the app here: http://blink-web.madtek.ro
+
+Logging level was set to INFO level, it won't log request/response information.
+
 #### Features
 - view the list of recordings
 - play a recording
