@@ -5,7 +5,10 @@
  * the 'LICENSE.txt' file, which is part of this source code package.
  */
 
-// eslint-disable-next-line import/prefer-default-export
-export const config = {
-    baseUrl: 'http://localhost:8080'
-};
+export default class Pin {
+    pin: number;
+
+    constructor(jsonBody: Pin) {
+        this.pin = jsonBody.pin;
+    }
+}

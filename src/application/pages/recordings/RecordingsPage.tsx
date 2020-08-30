@@ -20,12 +20,13 @@ import RecordingComponent from '../../components/recoding/RecordingComponent';
 import Session from '../../../domain/entities/Session';
 import { MediaRepository } from '../../../infrastructure/repositories/MediaRepository';
 import { mediaRepositoryToken } from '../../config/ServiceLocator';
-import styles from './RecordingsPage.module.scss';
+import styles from './RecordingsPageStyle.module.scss';
 
 interface RecordingsPageState {
     recordings: Media[];
     loading: boolean;
     recordingSets: { [k: string]: Media[] };
+    selected: Media[];
 }
 
 interface RecordingsPageProps extends WithTranslation {
@@ -41,12 +42,27 @@ class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPagePro
         this.state = {
             recordings: [],
             loading: true,
-            recordingSets: {}
+            recordingSets: {},
+            selected: []
         };
     }
 
     componentDidMount(): void {
         this.getRecordingsList();
+    }
+
+    onRecordingSelectionChanged(recording: Media, added: boolean): void {
+        this.setState((prevState) => {
+            let { selected } = prevState;
+            if (added) {
+                selected.push(recording);
+            } else {
+                selected = selected.filter((rec) => rec !== recording);
+            }
+            return {
+                selected: selected
+            };
+        });
     }
 
     getRecordingsList(page = 1): Promise<any> {
@@ -120,6 +136,9 @@ class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPagePro
                                 {this.state.recordingSets[recordingKey].map((recording) => (
                                     <Grid key={recording.id} item>
                                         <RecordingComponent
+                                            onSelected={(added: boolean): void => {
+                                                this.onRecordingSelectionChanged(recording, added);
+                                            }}
                                             session={this.props.session}
                                             media={recording}
                                             regionId={this.props.session.region.tier}

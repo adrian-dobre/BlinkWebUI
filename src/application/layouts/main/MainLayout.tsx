@@ -29,6 +29,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { WithTranslation, withTranslation } from 'react-i18next';
+import { Container } from 'typedi';
 import styles from './MainLayoutStyle.module.scss';
 import SimplePubSub, { PubSubEvent } from '../../utils/SimplePubSub';
 import UiConsoleComponent, { UIConsoleAlertType } from '../../components/ui-console/UiConsoleComponent';
@@ -38,6 +39,8 @@ import CamerasPage from '../../pages/cameras/CamerasPage';
 import SyncModulesPage from '../../pages/sync-modules/SyncModulesPage';
 import NetworksPage from '../../pages/networks/NetworksPage';
 import Session from '../../../domain/entities/Session';
+import { AuthRepository } from '../../../infrastructure/repositories/AuthRepository';
+import { authRepositoryToken } from '../../config/ServiceLocator';
 
 interface DashboardLayoutProps extends WithTranslation {
     hideDrawer?: boolean;
@@ -50,6 +53,9 @@ interface DashboardLayoutState {
 }
 
 class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutProps>, DashboardLayoutState> {
+    // eslint-disable-next-line react/sort-comp
+    authRepository: AuthRepository = Container.get(authRepositoryToken);
+
     static loadExistingSession(): Session | undefined {
         let existingSession: Session;
         try {
@@ -113,6 +119,15 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
 
     onLogout(): void {
         window.localStorage.removeItem('existingSession');
+        if (this.state.session) {
+            this.authRepository
+                .logout(
+                    this.state.session.region.tier,
+                    this.state.session.account.id.toString(),
+                    this.state.session.client.id,
+                    this.state.session.authtoken.authtoken
+                );
+        }
         this.setState({
             session: undefined
         });
