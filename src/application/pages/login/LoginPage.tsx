@@ -21,6 +21,9 @@ import { authRepositoryToken } from '../../config/ServiceLocator';
 interface LoginPageState {
     username?: string;
     password?: string;
+    pin?: number;
+    verifyPin?: boolean;
+    session?: Session;
 }
 
 interface LoginPageProps extends WithTranslation {
@@ -32,7 +35,9 @@ class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
 
     constructor(props: LoginPageProps) {
         super(props);
-        this.state = {};
+        this.state = {
+            verifyPin: false
+        };
     }
 
     onFieldUpdate(field: keyof LoginPageState, value?: string): void {
@@ -46,59 +51,131 @@ class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
             this.authRepository
                 .login(this.state.username, this.state.password)
                 .then((session: Session) => {
-                    SimplePubSub.publish(PubSubEvent.UI_CONSOLE_SUCCESS, {
-                        message: `Welcome ${this.state.username}`
-                    });
                     // eslint-disable-next-line no-param-reassign
                     session.account.email = this.state.username;
-                    this.props.onLogin(session);
+                    if (session.client.verificationRequired) {
+                        this.setState({
+                            verifyPin: true,
+                            session: session
+                        });
+                    } else {
+                        this.setState({
+                            verifyPin: false,
+                            session: session
+                        });
+                        this.onLoginCompleted();
+                    }
+                });
+        }
+    }
+
+    onLoginCompleted() {
+        SimplePubSub.publish(PubSubEvent.UI_CONSOLE_SUCCESS, {
+            message: `Welcome ${this.state.username}`
+        });
+
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.props.onLogin(this.state.session!);
+    }
+
+    onVerifyPin(): void {
+        if (this.state.pin && this.state.session) {
+            this.authRepository
+                .verifyPin(
+                    this.state.session.region.tier,
+                    this.state.session.account.id.toString(),
+                    this.state.session.client.id,
+                    this.state.pin,
+                    this.state.session.authtoken.authtoken
+                )
+                .then((verification) => {
+                    if (verification.valid) {
+                        this.onLoginCompleted();
+                    }
                 });
         }
     }
 
     render(): JSX.Element {
         return (
-            <Card className={styles.loginCard}>
-                <Typography variant="h4" className={styles.cardTitle}>
-                    {this.props.t('login-page.login-form.title')}
-                </Typography>
-                <form noValidate autoComplete="off">
-                    <TextField
-                        size="small"
-                        required={true}
-                        label={this.props.t('login-page.login-form.field-label.username')}
-                        fullWidth
-                        margin="dense"
-                        variant="outlined"
-                        onChange={(event): void => {
-                            this.onFieldUpdate('username', event.target.value);
-                        }}
-                    />
-                    <TextField
-                        type="password"
-                        size="small"
-                        required={true}
-                        label={this.props.t('login-page.login-form.field-label.password')}
-                        fullWidth
-                        margin="dense"
-                        variant="outlined"
-                        onChange={(event): void => {
-                            this.onFieldUpdate('password', event.target.value);
-                        }}
-                    />
-                    <div className={styles.cardActions}>
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            onClick={(): void => {
-                                this.onLogin();
-                            }}
-                        >
-                            {this.props.t('login-page.login-form.button-label.login')}
-                        </Button>
-                    </div>
-                </form>
-            </Card>
+            this.state.verifyPin
+                ? (
+                    <Card className={styles.verifyPinCard}>
+                        <Typography variant="h4" className={styles.cardTitle}>
+                            {this.props.t('login-page.verify-pin-form.verify-pin-title')}
+                        </Typography>
+                        <Typography className={styles.cardDescription}>
+                            {this.props.t('login-page.verify-pin-form.verify-pin-description')}
+                        </Typography>
+                        <form noValidate autoComplete="off">
+                            <TextField
+                                size="small"
+                                required={true}
+                                label={this.props.t('login-page.verify-pin-form.field-label.pin')}
+                                fullWidth
+                                margin="dense"
+                                variant="outlined"
+                                onChange={(event): void => {
+                                    this.onFieldUpdate('pin', event.target.value);
+                                }}
+                            />
+                            <div className={styles.cardActions}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={(): void => {
+                                        this.onVerifyPin();
+                                    }}
+                                >
+                                    {this.props.t('login-page.verify-pin-form.button-label.verify-pin')}
+                                </Button>
+                            </div>
+                        </form>
+                    </Card>
+                )
+                : (
+                    <Card className={styles.loginCard}>
+                        <Typography variant="h4" className={styles.cardTitle}>
+                            {this.props.t('login-page.login-form.title')}
+                        </Typography>
+                        <form noValidate autoComplete="off">
+                            <TextField
+                                size="small"
+                                required={true}
+                                label={this.props.t('login-page.login-form.field-label.username')}
+                                fullWidth
+                                margin="dense"
+                                variant="outlined"
+                                onChange={(event): void => {
+                                    this.onFieldUpdate('username', event.target.value);
+                                }}
+                            />
+                            <TextField
+                                type="password"
+                                size="small"
+                                required={true}
+                                label={this.props.t('login-page.login-form.field-label.password')}
+                                fullWidth
+                                margin="dense"
+                                variant="outlined"
+                                onChange={(event): void => {
+                                    this.onFieldUpdate('password', event.target.value);
+                                }}
+                            />
+                            <div className={styles.cardActions}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={(): void => {
+                                        this.onLogin();
+                                    }}
+                                >
+                                    {this.props.t('login-page.login-form.button-label.login')}
+                                </Button>
+                            </div>
+                        </form>
+                    </Card>
+                )
         );
     }
 }

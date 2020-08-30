@@ -7,8 +7,10 @@
 
 export default class Client {
     id: string;
+    verificationRequired: boolean;
 
     constructor(jsonBody: Client) {
         this.id = jsonBody.id;
+        this.verificationRequired = jsonBody.verificationRequired;
     }
 }

@@ -8,6 +8,7 @@
 import { BaseServiceClient } from '../../../helpers/BaseServiceClient';
 import { AuthRepository } from '../../AuthRepository';
 import Session from '../../../../domain/entities/Session';
+import ClientVerification from '../../../../domain/entities/ClientVerification';
 
 export default class AuthRepositoryImpl implements AuthRepository {
     baseUrl: string;
@@ -28,5 +29,45 @@ export default class AuthRepositoryImpl implements AuthRepository {
                 }
             )
             .then((response) => new Session(response.data));
+    }
+
+    verifyPin(
+        regionId: string,
+        accountId: string,
+        clientId: string,
+        pin: number,
+        authToken: string
+    ): Promise<ClientVerification> {
+        return new BaseServiceClient(this.baseUrl)
+            .post(
+                `/regions/${regionId}/accounts/${accountId}/clients/${clientId}/pin/verify`,
+                {
+                    headers: {
+                        authToken: authToken
+                    },
+                    data: {
+                        pin: pin
+                    }
+                }
+            )
+            .then((response) => new ClientVerification(response.data));
+    }
+
+    logout(
+        regionId: string,
+        accountId: string,
+        clientId: string,
+        authToken: string
+    ): Promise<void> {
+        return new BaseServiceClient(this.baseUrl)
+            .post(
+                `/regions/${regionId}/accounts/${accountId}/clients/${clientId}/logout`,
+                {
+                    headers: {
+                        authToken: authToken
+                    }
+                }
+            )
+            .then((response) => response.data);
     }
 }
