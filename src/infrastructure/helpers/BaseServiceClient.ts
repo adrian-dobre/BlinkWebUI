@@ -95,4 +95,8 @@ export class BaseServiceClient {
     put(path?: string, config: AxiosRequestConfig = {}): Promise<BaseServiceResponse> {
         return this.baseRequest({ ...config, url: path, method: 'PUT' });
     }
+
+    delete(path?: string, config: AxiosRequestConfig = {}): Promise<BaseServiceResponse> {
+        return this.baseRequest({ ...config, url: path, method: 'DELETE' });
+    }
 }

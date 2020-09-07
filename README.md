@@ -33,9 +33,13 @@ Logging level was set to INFO level, it won't log request/response information.
 
 #### Features
 - view the list of recordings
+- bulk download recordings
+- bulk delete recordings
 - play a recording
 - view the list of cameras
+- enable/disable camera
 - view the list of networks
+- arm/disarm network
 - view the list of blink modules
 
 Note: I was unable to open a live view to the camera, it seems that it uses a proprietary protocol (immis) I could
@@ -45,10 +49,9 @@ not figure it out (as stated before, there is no documentation for 3rd party dev
 You can see a short [UI Demo here](https://drive.google.com/open?id=1__WDFvufUvQQ_31xT3WVCnsLwtUlsuqz)
 
 #### Roadmap (if there is community interest and time permits)
-- ability to change settings
-- ability to download recordings
+- (maybe) ability to change settings
 - (maybe) UI improvements
-- cloud (Google Drive) backups of recordings
+- (maybe) cloud (Google Drive) backups of recordings
 - others?!
 
 
