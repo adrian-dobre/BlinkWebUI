@@ -27,13 +27,13 @@ interface RecordingComponentState {
     media?: string;
     loading: boolean;
     isPlaying: boolean;
-    selected: boolean;
 }
 
 interface RecordingComponentProps {
     regionId: string;
     media: Media;
     session: Session;
+    selected: boolean;
     onSelected?: (added: boolean) => void;
 }
 
@@ -55,7 +55,6 @@ export default class RecordingComponent
     constructor(props: RecordingComponentProps) {
         super(props);
         this.state = {
-            selected: false,
             loading: true,
             isPlaying: false
         };
@@ -90,14 +89,9 @@ export default class RecordingComponent
     }
 
     onRecordingSelected(): void {
-        this.setState((prevState) => {
-            if (this.props.onSelected) {
-                this.props.onSelected(!prevState.selected);
-            }
-            return {
-                selected: !prevState.selected
-            };
-        });
+        if (this.props.onSelected) {
+            this.props.onSelected(!this.props.selected);
+        }
     }
 
 
@@ -169,7 +163,7 @@ export default class RecordingComponent
                     />
                     <WhiteCheckbox
                         className={styles.recordingCheckmark}
-                        checked={this.state.selected}
+                        checked={this.props.selected}
                         onChange={(): void => {
                             this.onRecordingSelected();
                         }}

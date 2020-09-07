@@ -9,5 +9,6 @@ import Media from '../../domain/entities/Media';
 
 export interface MediaRepository {
     getMediaList(regionId: string, accountId: string, authToken: string, page: number): Promise<Media[]>;
+    deleteMediaList(regionId: string, accountId: string, authToken: string, mediaList: number[]): Promise<any>;
     getMedia(regionId: string, mediaPath: string, authToken: string): Promise<Blob>;
 }

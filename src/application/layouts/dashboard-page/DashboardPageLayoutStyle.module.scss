@@ -12,6 +12,7 @@
 
   .page-title-wrapper {
     margin-bottom: 3px;
+    position: relative;
 
     .page-title {
       padding: 10px 20px;
@@ -22,6 +23,12 @@
         margin-right: 10px;
         vertical-align: bottom;
       }
+    }
+
+    .bulk-actions {
+      position: absolute;
+      right: 20px;
+      top: 10px;
     }
   }
 

@@ -31,7 +31,7 @@ export default class SimplePubSub {
         if (SimplePubSub.registry[event]) {
             SimplePubSub.registry[event]!.forEach((registeredHandler) => {
                 if (registeredHandler === handler) {
-                    delete SimplePubSub.registry[event];
+                    delete SimplePubSub.registry[event]![registeredHandler as keyof object];
                 }
             });
         }

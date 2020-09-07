@@ -43,6 +43,27 @@ export default class MediaRepositoryImpl implements MediaRepository {
             });
     }
 
+    deleteMediaList(
+        regionId: string,
+        accountId: string,
+        authToken: string,
+        mediaList: number[]
+    ): Promise<any> {
+        return new BaseServiceClient(this.baseUrl)
+            .delete(
+                `/regions/${regionId}/accounts/${accountId}/media`,
+                {
+                    data: {
+                        mediaList: mediaList
+                    },
+                    headers: {
+                        authToken: authToken
+                    }
+                }
+            )
+            .then((response) => response.data);
+    }
+
     getMedia(regionId: string, mediaPath: string, authToken: string): Promise<Blob> {
         return new BaseServiceClient(this.baseUrl)
             .get(
