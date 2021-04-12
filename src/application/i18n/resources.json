@@ -15,7 +15,7 @@
       "login-page.login-form.field-label.password": "Password",
       "login-page.login-form.field-label.username": "Username",
       "login-page.verify-pin-form.verify-pin-title": "Verify Client",
-      "login-page.verify-pin-form.verify-pin-description": "Please input the PIN number sent to your email address to verify your device.",
+      "login-page.verify-pin-form.verify-pin-description": "Please input the PIN number sent to your email address or phone to verify your device.",
       "login-page.verify-pin-form.field-label.pin": "PIN Code",
       "login-page.verify-pin-form.button-label.verify-pin": "Submit",
       "login-page.login-form.title": "Login",
