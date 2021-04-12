@@ -44,7 +44,7 @@
     "webpack": "^4.42.1",
     "webpack-bundle-analyzer": "^3.8.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3",
+    "webpack-dev-server": "^3.11.2",
     "webpack-manifest-plugin": "^2.2.0"
   },
   "dependencies": {
@@ -52,9 +52,9 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.54",
     "@types/react-router-dom": "^5.1.4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "i18next": "^19.4.4",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "moment": "^2.25.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
