@@ -97,7 +97,8 @@ class NetworksPage extends React.PureComponent<PropsWithChildren<NetworksPagePro
             });
     }
 
-    getNetworkList(): Promise<any> {
+    // eslint
+    getNetworkList(): Promise<void> {
         return this.networkRepository
             .getNetworkList(
                 this.props.session.region.tier,

@@ -48,6 +48,7 @@ export default class MediaRepositoryImpl implements MediaRepository {
         accountId: string,
         authToken: string,
         mediaList: number[]
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ): Promise<any> {
         return new BaseServiceClient(this.baseUrl)
             .delete(

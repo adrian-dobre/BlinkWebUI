@@ -158,7 +158,7 @@ class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPagePro
         }));
     }
 
-    getRecordingsList(page = 1): Promise<any> {
+    getRecordingsList(page = 1): Promise<void> {
         return this.mediaRepository
             .getMediaList(
                 this.props.session.region.tier,

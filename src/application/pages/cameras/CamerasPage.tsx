@@ -110,7 +110,7 @@ class CamerasPage extends React.PureComponent<PropsWithChildren<CamerasPageProps
             });
     }
 
-    getCameraList(): Promise<any> {
+    getCameraList(): Promise<void> {
         return this.cameraRepository
             .getCameraList(
                 this.props.session.region.tier,

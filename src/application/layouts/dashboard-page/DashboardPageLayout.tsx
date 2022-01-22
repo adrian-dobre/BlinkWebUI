@@ -40,7 +40,7 @@ class DashboardPageLayout
         this.state = {};
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         // eslint-disable-next-line no-undef
         document.title = `${this.props.t('application.title')} - ${this.props.title}`;
     }

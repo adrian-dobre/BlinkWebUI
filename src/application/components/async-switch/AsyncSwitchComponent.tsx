@@ -39,7 +39,7 @@ export default class AsyncSwitchComponent
 
         this.props.onChange()
             .then((result) => {
-                this.setState((prevState) => ({
+                this.setState(() => ({
                     loading: false
                 }));
                 return result;

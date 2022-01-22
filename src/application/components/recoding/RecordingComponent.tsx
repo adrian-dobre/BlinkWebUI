@@ -94,7 +94,6 @@ export default class RecordingComponent
         }
     }
 
-
     getMedia(region: string, mediaPath: string, authToken: string): Promise<string> {
         return new Promise((resolve, reject) => {
             this.mediaRepository
