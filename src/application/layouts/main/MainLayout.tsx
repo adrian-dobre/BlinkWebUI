@@ -59,7 +59,7 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
     static loadExistingSession(): Session | undefined {
         let existingSession: Session;
         try {
-            existingSession = JSON.parse(window.localStorage.getItem('existingSession')!) as Session;
+            existingSession = JSON.parse(window.localStorage.getItem('existingSession') as string) as Session;
         } catch (e) {
             // nothing to do, invalid/missing existingSession
         }
@@ -95,7 +95,7 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
         });
     }
 
-    onDismissMenu() {
+    onDismissMenu(): void {
         this.setState({
             accountMenuAnchor: undefined
         });
@@ -180,7 +180,7 @@ class MainLayout extends React.PureComponent<PropsWithChildren<DashboardLayoutPr
             );
         } else {
             content = (
-                <LoginPage onLogin={(session) => {
+                <LoginPage onLogin={(session): void => {
                     this.onLogin(session);
                 }}
                 />

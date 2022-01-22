@@ -16,7 +16,7 @@ export default class VideoPlayerComponent extends React.PureComponent<VideoPlaye
     render(): JSX.Element {
         return (
             <div
-                onClick={(event) => {
+                onClick={(event): void => {
                     event.stopPropagation();
                 }}
             >

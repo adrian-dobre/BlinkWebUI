@@ -66,7 +66,7 @@ export default class UiConsoleComponent extends React.PureComponent<{}, UiConsol
             .forEach((key: string) => {
                 const pubSubEventKey = key as unknown as PubSubEvent;
                 SimplePubSub.subscribe(pubSubEventKey, (ev) => {
-                    const alertType = UiConsoleComponent.eventsToTypeMap[pubSubEventKey]!;
+                    const alertType = UiConsoleComponent.eventsToTypeMap[pubSubEventKey] as UIConsoleAlertType;
                     const newAlert = {
                         id: v4(),
                         message: ev.message,

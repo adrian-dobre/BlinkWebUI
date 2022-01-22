@@ -69,7 +69,7 @@ class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
         }
     }
 
-    onLoginCompleted() {
+    onLoginCompleted(): void {
         SimplePubSub.publish(PubSubEvent.UI_CONSOLE_SUCCESS, {
             message: `Welcome ${this.state.username}`
         });

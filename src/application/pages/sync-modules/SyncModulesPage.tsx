@@ -49,7 +49,7 @@ class SyncModulesPage extends React.PureComponent<PropsWithChildren<SyncModulesP
         this.getModuleList();
     }
 
-    getModuleList(): Promise<any> {
+    getModuleList(): Promise<void> {
         return this.syncModuleRepository
             .getSyncModuleList(
                 this.props.session.region.tier,
