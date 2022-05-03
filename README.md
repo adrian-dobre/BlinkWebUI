@@ -31,6 +31,8 @@ You can try a build of the app here: http://blink-web.madtek.ro
 
 Logging level was set to INFO level, it won't log request/response information.
 
+**NOTE**: If there are many people using the demo app at the same time, CloudFront may start blocking requests making the app reply with 401/403 status code. In this case, I suggest you host your own private instance of the app, either locally or on your webserver. You can also try the docker version of the app here built by [@mcmoe](https://github.com/mcmoe) here: https://github.com/mcmoe/blinkwebapp
+
 #### Features
 - view the list of recordings
 - bulk download recordings
