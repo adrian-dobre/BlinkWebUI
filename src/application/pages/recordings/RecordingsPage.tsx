@@ -139,8 +139,8 @@ class RecordingsPage extends React.Component<PropsWithChildren<RecordingsPagePro
                         this.props.session.authtoken.authtoken)
                     .then((blob) => {
                         const createdTime = moment(media.createdAt).format('MMM Do YYYY HH:mm:ss');
-                        const fileName = media.media.replace(/^.*\/([^/]+?\.[^/]+?)$/, '$1');
-                        Helpers.downloadBlob(`${createdTime} - ${fileName}`, blob);
+                        const extension = media.media.replace(/^.*\/(\.[^/]+?)$/, '$1');
+                        Helpers.downloadBlob(`${createdTime} - ${extension}`, blob);
                         downloadNextMedia();
                     });
             }
